@@ -2,25 +2,27 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ClientOnly } from "@tanstack/react-router";
 import { MapPin, Navigation } from "lucide-react";
-import { properties, propertyCoords } from "@/data/site";
+import { propertyCoords, type Property } from "@/data/site";
 
 const LeafletMap = lazy(() => import("./LeafletMap"));
 
-const points = properties
-  .filter((p) => propertyCoords[p.slug])
-  .map((p) => ({ ...p, ...propertyCoords[p.slug]! }));
+export function PropertyMapExplorer({ properties }: { properties: Property[] }) {
+  const points = properties
+    .filter((p) => propertyCoords[p.slug])
+    .map((p) => ({ ...p, ...propertyCoords[p.slug]! }));
 
-export function PropertyMapExplorer() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || points.length < 2) return;
     const t = setInterval(() => setActive((p) => (p + 1) % points.length), 5000);
     return () => clearInterval(t);
-  }, [paused]);
+  }, [paused, points.length]);
 
-  const current = points[active]!;
+  const current = points[active % Math.max(points.length, 1)];
+  if (!current) return null;
+
   const selectSlug = (slug: string) => {
     const idx = points.findIndex((p) => p.slug === slug);
     if (idx >= 0) setActive(idx);
@@ -40,7 +42,6 @@ export function PropertyMapExplorer() {
         </p>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-          {/* Real interactive map */}
           <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
             <ClientOnly
               fallback={
@@ -69,8 +70,6 @@ export function PropertyMapExplorer() {
             </div>
           </div>
 
-
-          {/* Rotating property panel */}
           <div className="flex flex-col gap-4">
             <article
               key={current.slug}
