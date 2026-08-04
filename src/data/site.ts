@@ -325,6 +325,7 @@ export const testimonials = [
 ];
 
 /** Stable non-optional references for head() metadata. */
-export const heroImage = heroSlides[0]!.image;
+export const heroImage = "https://hotstepsholdings.co.ke/wp-content/uploads/2025/08/summit-2.jpg";
+
 export const ceoImage = team[0]!.image;
 export const ceoName = team[0]!.name;
