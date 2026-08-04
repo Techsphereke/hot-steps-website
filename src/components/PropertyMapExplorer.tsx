@@ -1,40 +1,30 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { ClientOnly } from "@tanstack/react-router";
 import { MapPin, Navigation } from "lucide-react";
 import { properties, propertyCoords } from "@/data/site";
+
+const LeafletMap = lazy(() => import("./LeafletMap"));
 
 const points = properties
   .filter((p) => propertyCoords[p.slug])
   .map((p) => ({ ...p, ...propertyCoords[p.slug]! }));
 
-const W = 620;
-const H = 460;
-
-/** Hand-placed positions so every pin stays legible (geo order preserved). */
-const layout: Record<string, { x: number; y: number }> = {
-  "goshen-gardens": { x: 120, y: 95 },
-  "ushindi-gardens": { x: 155, y: 265 },
-  "sunrise-gardens-phase-2": { x: 250, y: 355 },
-  "eden-ridge": { x: 350, y: 300 },
-  "summit-gardens-phase-2": { x: 400, y: 390 },
-  "thogoto-gardens": { x: 505, y: 320 },
-};
-
-const project = (slug: string) => layout[slug] ?? { x: W / 2, y: H / 2 };
-
 export function PropertyMapExplorer() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
 
-
   useEffect(() => {
     if (paused) return;
-    const t = setInterval(() => setActive((p) => (p + 1) % points.length), 4200);
+    const t = setInterval(() => setActive((p) => (p + 1) % points.length), 5000);
     return () => clearInterval(t);
   }, [paused]);
 
   const current = points[active]!;
-  
+  const selectSlug = (slug: string) => {
+    const idx = points.findIndex((p) => p.slug === slug);
+    if (idx >= 0) setActive(idx);
+  };
 
   return (
     <section
@@ -50,87 +40,27 @@ export function PropertyMapExplorer() {
         </p>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
-          {/* Map */}
+          {/* Real interactive map */}
           <div className="relative overflow-hidden rounded-2xl border border-border bg-surface shadow-card">
-            <svg
-              viewBox={`0 0 ${W} ${H}`}
-              className="h-full w-full"
-              role="img"
-              aria-label={`Map highlighting ${current.title} in ${current.location}`}
+            <ClientOnly
+              fallback={
+                <div className="flex h-[420px] items-center justify-center text-sm text-muted-foreground">
+                  Loading map…
+                </div>
+              }
             >
-              <defs>
-                <linearGradient id="land" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="var(--muted)" />
-                  <stop offset="100%" stopColor="var(--secondary)" />
-                </linearGradient>
-                <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
-                  <path
-                    d="M28 0H0V28"
-                    fill="none"
-                    stroke="var(--border)"
-                    strokeWidth="0.8"
-                  />
-                </pattern>
-              </defs>
+              <Suspense
+                fallback={
+                  <div className="flex h-[420px] items-center justify-center text-sm text-muted-foreground">
+                    Loading map…
+                  </div>
+                }
+              >
+                <LeafletMap points={points} activeSlug={current.slug} onSelect={selectSlug} />
+              </Suspense>
+            </ClientOnly>
 
-              <rect width={W} height={H} fill="url(#land)" />
-              <rect width={W} height={H} fill="url(#grid)" opacity="0.7" />
-
-              {/* stylised roads linking the projects */}
-              <path
-                d={points
-                  .map((p, i) => {
-                    const { x, y } = project(p.slug);
-                    return `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`;
-                  })
-                  .join(" ")}
-                fill="none"
-                stroke="var(--primary)"
-                strokeWidth="2"
-                strokeDasharray="6 8"
-                opacity="0.45"
-              />
-
-              {points.map((p, idx) => {
-                const { x, y } = project(p.slug);
-                const isActive = idx === active;
-                return (
-                  <g
-                    key={p.slug}
-                    transform={`translate(${x} ${y})`}
-                    onMouseEnter={() => setActive(idx)}
-                    onClick={() => setActive(idx)}
-                    className="cursor-pointer"
-                  >
-                    {isActive && (
-                      <circle r="22" fill="var(--accent)" opacity="0.25" className="pulse" />
-                    )}
-                    <circle
-                      r={isActive ? 9 : 6}
-                      fill={isActive ? "var(--accent)" : "var(--primary)"}
-                      stroke="var(--background)"
-                      strokeWidth="2.5"
-                      className="transition-all duration-300"
-                    />
-                    {isActive && (
-                      <text
-                        y={-20}
-                        textAnchor="middle"
-                        fontSize={13}
-                        fontWeight={700}
-                        fill="var(--foreground)"
-                      >
-                        {p.location.split(",")[0]}
-                      </text>
-                    )}
-                  </g>
-                );
-              })}
-            </svg>
-
-            <div
-              className="pointer-events-none absolute left-4 bottom-4 max-w-[70%] rounded-lg border border-border bg-card/95 px-4 py-3 shadow-lift backdrop-blur"
-            >
+            <div className="pointer-events-none absolute left-4 bottom-6 z-[500] max-w-[70%] rounded-lg border border-border bg-card/95 px-4 py-3 shadow-lift backdrop-blur">
               <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent">
                 <Navigation className="h-3.5 w-3.5" aria-hidden="true" />
                 {current.location}
@@ -138,6 +68,7 @@ export function PropertyMapExplorer() {
               <p className="mt-1 text-sm font-bold text-primary-dark">{current.title}</p>
             </div>
           </div>
+
 
           {/* Rotating property panel */}
           <div className="flex flex-col gap-4">
