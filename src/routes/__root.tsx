@@ -111,7 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "Hotstep Holdings Ltd",
           url: "/",
-          logo: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/02/hotstep-holdings-png-logo.png",
+          logo: "/favicon.png",
           email: "hotstepholdings@gmail.com",
           telephone: ["+254742777444", "+254720484848"],
         }),
