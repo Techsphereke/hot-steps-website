@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
+import { siteContentQuery } from "@/lib/content.functions";
+import { useLive } from "@/lib/live";
 import { awards, testimonials } from "@/data/site";
 
 const title = "Awards & Titles | Hotstep Holdings Ltd Recognition & Testimonials";
@@ -8,6 +10,7 @@ const description =
 const cover = awards[0]!.image;
 
 export const Route = createFileRoute("/awards-titles")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   component: AwardsPage,
   head: () => ({
     meta: [
@@ -26,6 +29,8 @@ export const Route = createFileRoute("/awards-titles")({
 });
 
 function AwardsPage() {
+  const live = useLive();
+
   return (
     <PageShell>
       <PageHero
@@ -35,7 +40,7 @@ function AwardsPage() {
 
       <section className="py-16">
         <div className="container-page grid gap-6 sm:grid-cols-3">
-          {awards.map((a) => (
+          {live.awards.map((a) => (
             <figure key={a.title} className="overflow-hidden rounded-lg shadow-card">
               <img
                 src={a.image}
