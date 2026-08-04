@@ -143,6 +143,10 @@ function Index() {
     <PageShell>
       <HeroSlider />
 
+      <PropertyMapExplorer />
+
+
+
       <section className="bg-surface py-14">
         <div className="container-page">
           <Reveal>
