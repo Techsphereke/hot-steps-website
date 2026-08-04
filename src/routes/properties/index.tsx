@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { PropertyCard } from "@/components/PropertyCard";
-import { properties, locations, heroImage } from "@/data/site";
+import { siteContentQuery } from "@/lib/content.functions";
+import { useLive } from "@/lib/live";
+import { locations, heroImage } from "@/data/site";
 
 const title = "Plots for Sale in Kikuyu, Kamangu, Thigio & Gilgil | Hotstep Holdings";
 const description =
@@ -10,6 +12,7 @@ const description =
 type Search = { location?: string | undefined };
 
 export const Route = createFileRoute("/properties/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   component: PropertiesPage,
   validateSearch: (search: Record<string, unknown>): Search => ({
     location: typeof search["location"] === "string" ? (search["location"] as string) : undefined,
@@ -32,10 +35,11 @@ export const Route = createFileRoute("/properties/")({
 
 function PropertiesPage() {
   const { location } = Route.useSearch();
+  const live = useLive();
   const filtered = location
-    ? properties.filter((p) => p.location.toLowerCase().includes(location.toLowerCase()))
-    : properties;
-  const shown = filtered.length > 0 ? filtered : properties;
+    ? live.properties.filter((p) => p.location.toLowerCase().includes(location.toLowerCase()))
+    : live.properties;
+  const shown = filtered.length > 0 ? filtered : live.properties;
 
   return (
     <PageShell>

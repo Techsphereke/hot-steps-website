@@ -2,18 +2,24 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Check, MapPin, Phone } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { PropertyCard } from "@/components/PropertyCard";
-import { properties, site } from "@/data/site";
+import { siteContentQuery } from "@/lib/content.functions";
+import { toLive, useLive } from "@/lib/live";
+import { site } from "@/data/site";
 
 export const Route = createFileRoute("/properties/$slug")({
-  loader: ({ params }) => {
-    const property = properties.find((p) => p.slug === params.slug);
+  loader: async ({ context, params }) => {
+    const content = await context.queryClient.ensureQueryData(siteContentQuery);
+    const live = toLive(content);
+    const property = live.properties.find((p) => p.slug === params.slug);
     if (!property) throw notFound();
     return { property };
   },
   component: PropertyPage,
   head: ({ params, loaderData }) => {
     const p = loaderData?.property;
-    const title = p ? `${p.title} — Plots for Sale in ${p.location} | Hotstep Holdings` : "Property";
+    const title = p
+      ? `${p.title} — Plots for Sale in ${p.location} | Hotstep Holdings`
+      : "Property";
     const description = p?.description ?? "Plots for sale from Hotstep Holdings Ltd.";
     return {
       meta: [
@@ -23,7 +29,7 @@ export const Route = createFileRoute("/properties/$slug")({
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
         { property: "og:url", content: `/properties/${params.slug}` },
-        ...(p?.image
+        ...(p?.image?.startsWith("http")
           ? [
               { property: "og:image", content: p.image },
               { name: "twitter:image", content: p.image },
@@ -59,7 +65,8 @@ export const Route = createFileRoute("/properties/$slug")({
 
 function PropertyPage() {
   const { property } = Route.useLoaderData();
-  const related = properties.filter((p) => p.slug !== property.slug).slice(0, 3);
+  const live = useLive();
+  const related = live.properties.filter((p) => p.slug !== property.slug).slice(0, 3);
 
   return (
     <PageShell>
@@ -81,15 +88,19 @@ function PropertyPage() {
             {property.price && <p className="price-tag mt-4">Price: {property.price}</p>}
             <p className="mt-6 text-base/7 text-muted-foreground">{property.description}</p>
 
-            <h2 className="mt-10 text-xl font-bold text-primary-dark">Features</h2>
-            <ul className="mt-4 space-y-2">
-              {property.features.map((f: string) => (
-                <li key={f} className="flex items-start gap-2 text-sm/6">
-                  <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-                  {f}
-                </li>
-              ))}
-            </ul>
+            {property.features.length > 0 && (
+              <>
+                <h2 className="mt-10 text-xl font-bold text-primary-dark">Features</h2>
+                <ul className="mt-4 space-y-2">
+                  {property.features.map((f: string) => (
+                    <li key={f} className="flex items-start gap-2 text-sm/6">
+                      <Check className="mt-1 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
 
           <aside className="h-fit rounded-lg border border-border bg-card p-7 shadow-card">
@@ -98,7 +109,7 @@ function PropertyPage() {
               Call our sales team and we will arrange a viewing at your convenience.
             </p>
             <div className="mt-5 space-y-3">
-              {site.phones.map((p) => (
+              {live.settings.phones.map((p) => (
                 <a
                   key={p}
                   href={`tel:${p.replace(/\s/g, "")}`}
