@@ -2,14 +2,19 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ClientOnly } from "@tanstack/react-router";
 import { MapPin, Navigation } from "lucide-react";
-import { propertyCoords, type Property } from "@/data/site";
+import { propertyCoords } from "@/data/site";
+import type { LiveProperty } from "@/lib/live";
 
 const LeafletMap = lazy(() => import("./LeafletMap"));
 
-export function PropertyMapExplorer({ properties }: { properties: Property[] }) {
+export function PropertyMapExplorer({ properties }: { properties: LiveProperty[] }) {
   const points = properties
-    .filter((p) => propertyCoords[p.slug])
-    .map((p) => ({ ...p, ...propertyCoords[p.slug]! }));
+    .map((p) => {
+      const lat = p.lat ?? propertyCoords[p.slug]?.lat;
+      const lng = p.lng ?? propertyCoords[p.slug]?.lng;
+      return typeof lat === "number" && typeof lng === "number" ? { ...p, lat, lng } : null;
+    })
+    .filter((p): p is LiveProperty & { lat: number; lng: number } => p !== null);
 
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);

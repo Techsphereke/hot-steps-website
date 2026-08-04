@@ -28,8 +28,10 @@ export type LivePost = {
   html: string;
 };
 
+export type LiveProperty = Property & { lat?: number; lng?: number };
+
 export type LiveContent = {
-  properties: Property[];
+  properties: LiveProperty[];
   slides: LiveSlide[];
   posts: LivePost[];
   awards: { title: string; image: string }[];
@@ -70,6 +72,8 @@ export function toLive(content: SiteContent | undefined): LiveContent {
           status: (p.status === "Sold Out" ? "Sold Out" : "On Sale") as Property["status"],
           description: p.description,
           features: p.features ?? [],
+          ...(typeof p.lat === "number" ? { lat: p.lat } : {}),
+          ...(typeof p.lng === "number" ? { lng: p.lng } : {}),
         }))
       : fallbackProperties,
     slides: content?.slides.length
