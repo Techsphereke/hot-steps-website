@@ -314,3 +314,13 @@ export const heroImage = "https://hotstepsholdings.co.ke/wp-content/uploads/2025
 
 export const ceoImage = team[0]!.image;
 export const ceoName = team[0]!.name;
+
+/** Approximate coordinates used by the interactive locations map. */
+export const propertyCoords: Record<string, { lat: number; lng: number }> = {
+  "summit-gardens-phase-2": { lat: -1.2536, lng: 36.6142 },
+  "thogoto-gardens": { lat: -1.2471, lng: 36.6724 },
+  "sunrise-gardens-phase-2": { lat: -1.2612, lng: 36.6068 },
+  "ushindi-gardens": { lat: -1.2204, lng: 36.5751 },
+  "eden-ridge": { lat: -1.2482, lng: 36.6031 },
+  "goshen-gardens": { lat: -0.4931, lng: 36.3162 },
+};
