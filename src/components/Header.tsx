@@ -33,7 +33,7 @@ export function Header() {
             <img
               src={site.logo}
               alt="Hotstep Holdings Ltd logo"
-              className="h-20 w-auto sm:h-24 lg:h-28"
+              className="h-24 w-auto sm:h-28 lg:h-32"
               width={360}
               height={112}
             />

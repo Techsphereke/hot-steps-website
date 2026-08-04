@@ -22,7 +22,7 @@ export function PropertyCard({ property }: { property: Property }) {
         {/* Hover-only summary popup (no click needed) */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-foreground/85 via-foreground/45 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none"
+          className="pointer-events-none absolute inset-0 flex flex-col justify-end bg-foreground/80 backdrop-blur-sm p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 motion-reduce:transition-none"
         >
           <div className="translate-y-3 transition-transform duration-300 group-hover:translate-y-0 motion-reduce:transform-none">
             <p className="text-sm font-bold uppercase tracking-wide text-primary-foreground">
