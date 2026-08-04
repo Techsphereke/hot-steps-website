@@ -73,7 +73,7 @@ function HeroSlider({ slides }: { slides: LiveSlide[] }) {
 
   return (
     <section className="relative bg-surface" aria-label="Featured properties">
-      <div className="relative h-[180px] overflow-hidden sm:h-[300px] lg:h-[430px]">
+      <div className="relative aspect-[16/7] overflow-hidden sm:aspect-auto sm:h-[300px] lg:h-[430px]">
         {slides.map((s, idx) => (
           <div
             key={s.title}
@@ -85,7 +85,7 @@ function HeroSlider({ slides }: { slides: LiveSlide[] }) {
             <img
               src={s.image}
               alt={`${s.title} — ${s.subtitle}`}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain sm:object-cover"
               loading={idx === 0 ? "eager" : "lazy"}
             />
 
