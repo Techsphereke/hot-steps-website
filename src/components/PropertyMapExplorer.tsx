@@ -67,14 +67,14 @@ export function PropertyMapExplorer() {
             >
               <defs>
                 <linearGradient id="land" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="hsl(var(--muted))" />
-                  <stop offset="100%" stopColor="hsl(var(--secondary))" />
+                  <stop offset="0%" stopColor="var(--muted)" />
+                  <stop offset="100%" stopColor="var(--secondary)" />
                 </linearGradient>
                 <pattern id="grid" width="28" height="28" patternUnits="userSpaceOnUse">
                   <path
                     d="M28 0H0V28"
                     fill="none"
-                    stroke="hsl(var(--border))"
+                    stroke="var(--border)"
                     strokeWidth="0.8"
                   />
                 </pattern>
@@ -92,7 +92,7 @@ export function PropertyMapExplorer() {
                   })
                   .join(" ")}
                 fill="none"
-                stroke="hsl(var(--primary))"
+                stroke="var(--primary)"
                 strokeWidth="2"
                 strokeDasharray="6 8"
                 opacity="0.45"
@@ -110,12 +110,12 @@ export function PropertyMapExplorer() {
                     className="cursor-pointer"
                   >
                     {isActive && (
-                      <circle r="22" fill="hsl(var(--accent))" opacity="0.25" className="pulse" />
+                      <circle r="22" fill="var(--accent)" opacity="0.25" className="pulse" />
                     )}
                     <circle
                       r={isActive ? 9 : 6}
-                      fill={isActive ? "hsl(var(--accent))" : "hsl(var(--primary))"}
-                      stroke="hsl(var(--background))"
+                      fill={isActive ? "var(--accent)" : "var(--primary)"}
+                      stroke="var(--background)"
                       strokeWidth="2.5"
                       className="transition-all duration-300"
                     />
@@ -125,7 +125,7 @@ export function PropertyMapExplorer() {
                       className="transition-all duration-300"
                       fontSize={isActive ? 13 : 11}
                       fontWeight={isActive ? 700 : 500}
-                      fill="hsl(var(--foreground))"
+                      fill="var(--foreground)"
                     >
                       {p.location.split(",")[0]}
                     </text>
