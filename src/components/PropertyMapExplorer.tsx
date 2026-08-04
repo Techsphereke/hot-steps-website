@@ -119,16 +119,17 @@ export function PropertyMapExplorer() {
                       strokeWidth="2.5"
                       className="transition-all duration-300"
                     />
-                    <text
-                      y={isActive ? -18 : -14}
-                      textAnchor="middle"
-                      className="transition-all duration-300"
-                      fontSize={isActive ? 13 : 11}
-                      fontWeight={isActive ? 700 : 500}
-                      fill="var(--foreground)"
-                    >
-                      {p.location.split(",")[0]}
-                    </text>
+                    {isActive && (
+                      <text
+                        y={-20}
+                        textAnchor="middle"
+                        fontSize={13}
+                        fontWeight={700}
+                        fill="var(--foreground)"
+                      >
+                        {p.location.split(",")[0]}
+                      </text>
+                    )}
                   </g>
                 );
               })}
