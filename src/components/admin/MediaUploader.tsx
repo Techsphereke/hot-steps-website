@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Upload, X } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { adminUploadMedia } from "@/lib/admin.functions";
 
 type Props = {
   value: string;
@@ -12,6 +13,7 @@ export function MediaUploader({ value, onChange, label = "Image" }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const uploadMedia = useServerFn(adminUploadMedia);
 
   async function upload(file: File) {
     if (file.size > 8 * 1024 * 1024) {
@@ -20,18 +22,18 @@ export function MediaUploader({ value, onChange, label = "Image" }: Props) {
     }
     setBusy(true);
     setError(null);
-    const extension = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-    const path = `${new Date().getFullYear()}/${crypto.randomUUID()}.${extension}`;
-    const { error: uploadError } = await supabase.storage
-      .from("media")
-      .upload(path, file, { contentType: file.type, upsert: false });
-    setBusy(false);
-    if (uploadError) {
-      setError(uploadError.message);
-      return;
+    try {
+      const body = new FormData();
+      body.set("file", file);
+      const result = await uploadMedia({ data: body });
+      onChange(result.url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload failed. Please try again.");
+    } finally {
+      setBusy(false);
     }
-    onChange(`/api/public/media/${path}`);
   }
+
 
   return (
     <div>
