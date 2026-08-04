@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, ShieldCheck, FileCheck2, Wallet, MapPin } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/Reveal";
 import { PropertyCard } from "@/components/PropertyCard";
 import { site, properties, posts, awards, heroSlides, testimonials, heroImage } from "@/data/site";
 
@@ -144,14 +145,18 @@ function Index() {
 
       <section className="bg-surface py-14">
         <div className="container-page">
-          <h1 className="section-title text-3xl sm:text-5xl">AFFORDABLE PLOTS FOR SALE.</h1>
-          <p className="mt-2 text-center text-lg text-primary-dark/80 sm:text-xl">
-            In Kikuyu, Gikambura, Kamangu, Thigio, Nachu.
-          </p>
+          <Reveal>
+            <h1 className="section-title text-3xl sm:text-5xl">AFFORDABLE PLOTS FOR SALE.</h1>
+            <p className="mt-2 text-center text-lg text-primary-dark/80 sm:text-xl">
+              In Kikuyu, Gikambura, Kamangu, Thigio, Nachu.
+            </p>
+          </Reveal>
 
           <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {properties.map((p) => (
-              <PropertyCard key={p.slug} property={p} />
+            {properties.map((p, idx) => (
+              <Reveal key={p.slug} delay={idx * 80}>
+                <PropertyCard property={p} />
+              </Reveal>
             ))}
           </div>
 
@@ -165,13 +170,13 @@ function Index() {
 
       <section className="py-16">
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
-          <img
+          <Reveal><img
             src="https://hotstepsholdings.co.ke/wp-content/uploads/2025/02/title-12-min-1024x683.jpg"
             alt="Hotstep Holdings clients receiving ready title deeds"
             className="w-full rounded-lg object-cover shadow-card"
             loading="lazy"
-          />
-          <div>
+          /></Reveal>
+          <Reveal delay={120}>
             <h2 className="text-2xl font-bold text-primary-dark sm:text-3xl">
               WHY CHOOSE HOTSTEPS HOLDINGS?
             </h2>
@@ -198,7 +203,7 @@ function Index() {
                 More about Hotstepholdings
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -209,14 +214,15 @@ function Index() {
             Hear what some of our clients had to say about Hotstepholdings
           </p>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
-            {testimonials.map((t) => (
+            {testimonials.map((t, idx) => (
+              <Reveal key={t.name} delay={idx * 100}>
               <blockquote
-                key={t.name}
-                className="rounded-lg border border-border bg-card p-6 shadow-card"
+                className="h-full rounded-lg border border-border bg-card p-6 shadow-card transition-shadow duration-300 hover:shadow-lift"
               >
                 <p className="text-sm/6 text-muted-foreground">&ldquo;{t.text}&rdquo;</p>
                 <footer className="mt-4 text-sm font-semibold text-primary-dark">{t.name}</footer>
               </blockquote>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -226,18 +232,20 @@ function Index() {
         <div className="container-page">
           <h2 className="section-title text-2xl sm:text-3xl">Awards and Recognition</h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
-            {awards.map((a) => (
-              <figure key={a.title} className="overflow-hidden rounded-lg shadow-card">
+            {awards.map((a, idx) => (
+              <Reveal key={a.title} delay={idx * 100}>
+              <figure className="group overflow-hidden rounded-lg shadow-card transition-shadow duration-300 hover:shadow-lift">
                 <img
                   src={a.image}
                   alt={a.title}
-                  className="aspect-[3/4] w-full object-cover"
+                  className="aspect-[3/4] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
                 <figcaption className="bg-card p-3 text-center text-sm font-semibold">
                   {a.title}
                 </figcaption>
               </figure>
+              </Reveal>
             ))}
           </div>
           <div className="mt-8 text-center">
@@ -253,16 +261,16 @@ function Index() {
           <h2 className="section-title text-2xl sm:text-3xl">News &amp; Blogs</h2>
           <p className="mt-2 text-center text-muted-foreground">Keep yourself up to date</p>
           <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((p) => (
+            {posts.map((p, idx) => (
+              <Reveal key={p.slug} delay={idx * 90}>
               <article
-                key={p.slug}
-                className="overflow-hidden rounded-lg border border-border bg-card shadow-card"
+                className="group h-full overflow-hidden rounded-lg border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-lift"
               >
                 <Link to="/blogs/$slug" params={{ slug: p.slug }}>
                   <img
                     src={p.image}
                     alt={p.title}
-                    className="aspect-[16/10] w-full object-cover"
+                    className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
                 </Link>
@@ -282,6 +290,7 @@ function Index() {
                   </Link>
                 </div>
               </article>
+              </Reveal>
             ))}
           </div>
         </div>
