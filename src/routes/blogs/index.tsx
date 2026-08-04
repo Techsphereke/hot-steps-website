@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
+import { siteContentQuery } from "@/lib/content.functions";
+import { useLive } from "@/lib/live";
 import { posts } from "@/data/site";
 
 const title = "Information Center | Land Buying Guides & News — Hotstep Holdings";
@@ -8,6 +10,7 @@ const description =
 const cover = posts[0]!.image;
 
 export const Route = createFileRoute("/blogs/")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   component: BlogsPage,
   head: () => ({
     meta: [
@@ -26,12 +29,14 @@ export const Route = createFileRoute("/blogs/")({
 });
 
 function BlogsPage() {
+  const live = useLive();
+
   return (
     <PageShell>
       <PageHero title="News & Blogs" subtitle="Keep yourself up to date" />
       <section className="bg-surface py-14">
         <div className="container-page grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => (
+          {live.posts.map((p) => (
             <article
               key={p.slug}
               className="overflow-hidden rounded-lg border border-border bg-card shadow-card"

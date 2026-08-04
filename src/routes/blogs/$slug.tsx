@@ -1,10 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { PageShell } from "@/components/PageShell";
-import { posts, site } from "@/data/site";
+import { siteContentQuery } from "@/lib/content.functions";
+import { toLive, useLive } from "@/lib/live";
+import { site } from "@/data/site";
 
 export const Route = createFileRoute("/blogs/$slug")({
-  loader: ({ params }) => {
-    const post = posts.find((p) => p.slug === params.slug);
+  loader: async ({ context, params }) => {
+    const content = await context.queryClient.ensureQueryData(siteContentQuery);
+    const post = toLive(content).posts.find((p) => p.slug === params.slug);
     if (!post) throw notFound();
     return { post };
   },
@@ -21,7 +24,7 @@ export const Route = createFileRoute("/blogs/$slug")({
         { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { property: "og:url", content: `/blogs/${params.slug}` },
-        ...(p?.image
+        ...(p?.image?.startsWith("http")
           ? [
               { property: "og:image", content: p.image },
               { name: "twitter:image", content: p.image },
@@ -51,7 +54,8 @@ export const Route = createFileRoute("/blogs/$slug")({
 
 function PostPage() {
   const { post } = Route.useLoaderData();
-  const more = posts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const live = useLive();
+  const more = live.posts.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
     <PageShell>
@@ -63,11 +67,10 @@ function PostPage() {
             alt={post.title}
             className="mt-6 w-full rounded-lg object-cover shadow-card"
           />
-          <div className="mt-8 space-y-5 text-base/7 text-muted-foreground">
-            {post.body.map((para: string) => (
-              <p key={para.slice(0, 30)}>{para}</p>
-            ))}
-          </div>
+          <div
+            className="prose-site mt-8 space-y-5 text-base/7 text-muted-foreground"
+            dangerouslySetInnerHTML={{ __html: post.html }}
+          />
           <div className="mt-10 rounded-lg border border-border bg-card p-6 shadow-card">
             <h2 className="text-lg font-bold text-primary-dark">Ready to own your plot?</h2>
             <p className="mt-2 text-sm text-muted-foreground">
