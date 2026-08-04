@@ -291,21 +291,6 @@ export const heroSlides = [
     to: "/properties/eden-ridge-gardens",
     banner: true,
   },
-  {
-    image: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/08/summit-2.jpg",
-    title: "SUMMIT GARDENS PHASE 2",
-    subtitle: "Kamangu, Kikuyu — 1.4M cash offer",
-    to: "/properties/summit-gardens-phase-2",
-    banner: false,
-  },
-  {
-    image:
-      "https://hotstepsholdings.co.ke/wp-content/uploads/2025/06/PROPERTY-FEATURE-SUNRISE.jpg",
-    title: "SUNRISE GARDENS PHASE 2",
-    subtitle: "Kamangu, Kikuyu — 1.1M cash offer",
-    to: "/properties/sunrise-gardens-phase-2",
-    banner: false,
-  },
 ];
 
 
