@@ -33,9 +33,9 @@ export function Header() {
             <img
               src={site.logo}
               alt="Hotstep Holdings Ltd logo"
-              className="h-24 w-auto sm:h-28 lg:h-32"
-              width={360}
-              height={112}
+              className="h-12 w-auto sm:h-14 lg:h-16"
+              width={220}
+              height={68}
             />
           </Link>
 
