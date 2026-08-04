@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { MapPin, Navigation } from "lucide-react";
 import { properties, propertyCoords } from "@/data/site";
@@ -9,29 +9,22 @@ const points = properties
 
 const W = 620;
 const H = 460;
-const PAD = 60;
 
-function useProjection() {
-  return useMemo(() => {
-    const lats = points.map((p) => p.lat);
-    const lngs = points.map((p) => p.lng);
-    const minLat = Math.min(...lats);
-    const maxLat = Math.max(...lats);
-    const minLng = Math.min(...lngs);
-    const maxLng = Math.max(...lngs);
-    const spanLat = maxLat - minLat || 1;
-    const spanLng = maxLng - minLng || 1;
-    return (lat: number, lng: number) => ({
-      x: PAD + ((lng - minLng) / spanLng) * (W - PAD * 2),
-      y: PAD + ((maxLat - lat) / spanLat) * (H - PAD * 2),
-    });
-  }, []);
-}
+/** Hand-placed positions so every pin stays legible (geo order preserved). */
+const layout: Record<string, { x: number; y: number }> = {
+  "goshen-gardens": { x: 120, y: 95 },
+  "ushindi-gardens": { x: 155, y: 265 },
+  "sunrise-gardens-phase-2": { x: 250, y: 355 },
+  "eden-ridge": { x: 350, y: 300 },
+  "summit-gardens-phase-2": { x: 400, y: 390 },
+  "thogoto-gardens": { x: 505, y: 320 },
+};
+
+const project = (slug: string) => layout[slug] ?? { x: W / 2, y: H / 2 };
 
 export function PropertyMapExplorer() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const project = useProjection();
   const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -41,7 +34,7 @@ export function PropertyMapExplorer() {
   }, [paused]);
 
   const current = points[active]!;
-  const currentPos = project(current.lat, current.lng);
+  const currentPos = project(current.slug);
 
   return (
     <section
@@ -87,7 +80,7 @@ export function PropertyMapExplorer() {
               <path
                 d={points
                   .map((p, i) => {
-                    const { x, y } = project(p.lat, p.lng);
+                    const { x, y } = project(p.slug);
                     return `${i === 0 ? "M" : "L"}${x.toFixed(1)} ${y.toFixed(1)}`;
                   })
                   .join(" ")}
@@ -99,7 +92,7 @@ export function PropertyMapExplorer() {
               />
 
               {points.map((p, idx) => {
-                const { x, y } = project(p.lat, p.lng);
+                const { x, y } = project(p.slug);
                 const isActive = idx === active;
                 return (
                   <g
