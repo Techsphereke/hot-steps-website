@@ -1,4 +1,6 @@
 import hotstepLogo from "@/assets/hotstep-logo.png.asset.json";
+import goshenSlider from "@/assets/goshen-slider.jpg.asset.json";
+import edenRidgeSlider from "@/assets/eden-ridge-slider.jpg.asset.json";
 
 export const site = {
   name: "Hotstep Holdings Ltd",
@@ -276,16 +278,25 @@ export const team = [
 
 export const heroSlides = [
   {
-    image: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/03/GOSHEN-GARDENS.jpg",
+    image: goshenSlider.url,
     title: "GOSHEN GARDENS",
     subtitle: "Gilgil, Nakuru — 550K cash offer",
     to: "/properties/goshen-gardens",
+    banner: true,
+  },
+  {
+    image: edenRidgeSlider.url,
+    title: "EDEN RIDGE GARDENS",
+    subtitle: "Kamangu, Kikuyu — 990K cash offer",
+    to: "/properties/eden-ridge-gardens",
+    banner: true,
   },
   {
     image: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/08/summit-2.jpg",
     title: "SUMMIT GARDENS PHASE 2",
     subtitle: "Kamangu, Kikuyu — 1.4M cash offer",
     to: "/properties/summit-gardens-phase-2",
+    banner: false,
   },
   {
     image:
@@ -293,8 +304,10 @@ export const heroSlides = [
     title: "SUNRISE GARDENS PHASE 2",
     subtitle: "Kamangu, Kikuyu — 1.1M cash offer",
     to: "/properties/sunrise-gardens-phase-2",
+    banner: false,
   },
 ];
+
 
 export const testimonials = [
   {
@@ -312,6 +325,7 @@ export const testimonials = [
 ];
 
 /** Stable non-optional references for head() metadata. */
-export const heroImage = heroSlides[0]!.image;
+export const heroImage = "https://hotstepsholdings.co.ke/wp-content/uploads/2025/08/summit-2.jpg";
+
 export const ceoImage = team[0]!.image;
 export const ceoName = team[0]!.name;

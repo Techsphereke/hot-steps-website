@@ -59,7 +59,7 @@ function HeroSlider() {
 
   return (
     <section className="relative bg-surface" aria-label="Featured properties">
-      <div className="relative h-[280px] overflow-hidden sm:h-[420px] lg:h-[520px]">
+      <div className="relative h-[180px] overflow-hidden sm:h-[300px] lg:h-[430px]">
         {heroSlides.map((s, idx) => (
           <div
             key={s.title}
@@ -71,24 +71,36 @@ function HeroSlider() {
             <img
               src={s.image}
               alt={`${s.title} — ${s.subtitle}`}
-              className="h-full w-full object-cover"
+              className={`h-full w-full ${s.banner ? "object-contain" : "object-cover"}`}
               loading={idx === 0 ? "eager" : "lazy"}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 via-foreground/30 to-transparent" />
-            <div className="container-page absolute inset-0 flex flex-col items-start justify-center gap-4">
-              <h2 className="max-w-xl text-3xl font-bold text-primary-foreground drop-shadow sm:text-5xl">
-                {s.title}
-              </h2>
-              <p className="flex items-center gap-2 text-base font-medium text-primary-foreground/90 sm:text-lg">
-                <MapPin className="h-5 w-5 text-accent" aria-hidden="true" />
-                {s.subtitle}
-              </p>
-              <Link to={s.to} className="btn-brand hover:bg-primary-dark">
-                View Details
-              </Link>
-            </div>
+
+            {s.banner ? (
+              <Link
+                to={s.to}
+                aria-label={`View details for ${s.title}`}
+                className="absolute inset-0"
+              />
+            ) : (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-r from-foreground/70 via-foreground/30 to-transparent" />
+                <div className="container-page absolute inset-0 flex flex-col items-start justify-center gap-4">
+                  <h2 className="max-w-xl text-3xl font-bold text-primary-foreground drop-shadow sm:text-5xl">
+                    {s.title}
+                  </h2>
+                  <p className="flex items-center gap-2 text-base font-medium text-primary-foreground/90 sm:text-lg">
+                    <MapPin className="h-5 w-5 text-accent" aria-hidden="true" />
+                    {s.subtitle}
+                  </p>
+                  <Link to={s.to} className="btn-brand hover:bg-primary-dark">
+                    View Details
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         ))}
+
 
         <button
           type="button"
