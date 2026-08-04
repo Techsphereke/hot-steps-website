@@ -49,16 +49,20 @@ In the same screen, add these under *Environment variables*:
 | `SUPABASE_PUBLISHABLE_KEY` | same as in `.env` |
 | `VITE_SUPABASE_URL` | same as in `.env` |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | same as in `.env` |
-| `SUPABASE_SERVICE_ROLE_KEY` | *(see note below)* |
+| `SUPABASE_SERVICE_ROLE_KEY` | your backend service-role key (required for images) |
 
 Restart the app after saving.
 
 ## 5. Notes / limitations
 
-- **Media uploads:** `/api/public/media/*` and the admin uploader use the
-  service-role key. That key is not exposed outside Lovable, so uploaded
-  images will not serve from cPanel unless you supply your own backend
-  credentials. Everything else (pages, SEO, listings, blogs) works.
+- **Media uploads:** uploading and serving images both run server-side through
+  `SUPABASE_SERVICE_ROLE_KEY`. The browser never sees that key — the admin
+  uploader posts the file to the server, which stores it in the private media
+  bucket, and `/api/public/media/*` streams it back. Set the variable above and
+  uploads work on cPanel exactly as they do on Lovable. Leave it unset and
+  everything else (pages, SEO, listings, blogs) still works, but images added
+  through the admin panel will not upload or display.
+
 - **Redeploying:** rebuild, re-upload `.output/`, then Restart the app.
 - **Subfolder installs** are not supported — host at a domain or subdomain root.
 - If the domain shows the cPanel default page, make sure the domain's document

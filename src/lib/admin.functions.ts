@@ -152,3 +152,21 @@ export const adminDeleteUser = createServerFn({ method: "POST" })
     await guardLastSuperAdmin(context.supabase, data.userId);
     return deleteUser(data.userId);
   });
+
+export const adminUploadMedia = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => {
+    if (!(input instanceof FormData)) throw new Error("Expected a file upload");
+    const file = input.get("file");
+    if (!(file instanceof File)) throw new Error("No file provided");
+    return { file };
+  })
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { uploadMedia } = await import("./media.server");
+    return uploadMedia({
+      name: data.file.name,
+      type: data.file.type,
+      bytes: await data.file.arrayBuffer(),
+    });
+  });
