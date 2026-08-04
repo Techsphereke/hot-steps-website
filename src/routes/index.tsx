@@ -71,7 +71,7 @@ function HeroSlider() {
             <img
               src={s.image}
               alt={`${s.title} — ${s.subtitle}`}
-              className={`h-full w-full ${s.banner ? "object-contain" : "object-cover"}`}
+              className="h-full w-full object-cover"
               loading={idx === 0 ? "eager" : "lazy"}
             />
 
