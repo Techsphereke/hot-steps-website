@@ -18,10 +18,11 @@ export function Footer() {
             <img
               src={site.logo}
               alt="Hotstep Holdings Ltd logo"
-              className="h-16 w-auto rounded-md bg-background p-2"
-              width={180}
-              height={64}
+              className="h-24 w-auto rounded-md bg-background p-2 transition-transform duration-300 hover:scale-105"
+              width={360}
+              height={112}
             />
+
           </Link>
           <p className="mt-4 text-sm/6 opacity-90">Our Vision Is {site.vision}</p>
         </div>
