@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ShieldCheck, FileCheck2, Wallet, MapPin } fr
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/Reveal";
 import { PropertyCard } from "@/components/PropertyCard";
+import { PropertyMapExplorer } from "@/components/PropertyMapExplorer";
 import { site, properties, posts, awards, heroSlides, testimonials, heroImage } from "@/data/site";
 
 const title = "Hotstep Holdings Ltd | Affordable Plots for Sale in Kikuyu, Kamangu & Thigio";
@@ -142,6 +143,10 @@ function Index() {
   return (
     <PageShell>
       <HeroSlider />
+
+      <PropertyMapExplorer />
+
+
 
       <section className="bg-surface py-14">
         <div className="container-page">
