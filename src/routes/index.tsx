@@ -85,7 +85,7 @@ function HeroSlider({ slides }: { slides: LiveSlide[] }) {
             <img
               src={s.image}
               alt={`${s.title} — ${s.subtitle}`}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain sm:object-cover"
               loading={idx === 0 ? "eager" : "lazy"}
             />
 
