@@ -93,8 +93,8 @@ function AdminLayout() {
   }
 
   return (
-    <div className="flex min-h-screen w-full bg-surface">
-      <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-card lg:flex">
+    <div className="grid min-h-screen w-full grid-cols-1 bg-surface lg:grid-cols-[16rem_minmax(0,1fr)]">
+      <aside className="hidden flex-col border-r border-border bg-card lg:sticky lg:top-0 lg:flex lg:h-screen">
         <div className="border-b border-border p-4">
           <img src={site.logo} alt="Hotstep Holdings Ltd" className="h-10 w-auto" />
           <p className="mt-2 text-xs text-muted-foreground">
@@ -149,7 +149,7 @@ function AdminLayout() {
             </Link>
           ))}
         </div>
-        <main className="p-5 sm:p-8">
+        <main className="mx-auto w-full max-w-[100rem] p-5 sm:p-8">
           <Outlet />
         </main>
       </div>
