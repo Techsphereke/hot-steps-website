@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { site } from "@/data/site";
+import { siteContentQuery } from "@/lib/content.functions";
+import { useLive } from "@/lib/live";
 
 const title = "Contact Hotstep Holdings Ltd | Book a Site Visit in Kikuyu";
 const description =
   "Talk to Hotstep Holdings Ltd. Call +254 720 48 48 48 or +254 742 777 444, email us, or book a site visit at our Gikambura office along Thogoto Mutarakwa road.";
 
 export const Route = createFileRoute("/contact-us")({
+  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   component: ContactPage,
   head: () => ({
     meta: [
@@ -24,6 +26,8 @@ export const Route = createFileRoute("/contact-us")({
 });
 
 function ContactPage() {
+  const live = useLive();
+  const site = live.settings;
   return (
     <PageShell>
       <PageHero title="Enquiries and Contacts" subtitle={site.name} />
