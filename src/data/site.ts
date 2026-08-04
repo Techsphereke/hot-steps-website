@@ -1,9 +1,11 @@
+import hotstepLogo from "@/assets/hotstep-logo.png.asset.json";
+
 export const site = {
   name: "Hotstep Holdings Ltd",
   tagline: "Your genuine property solution",
   email: "hotstepholdings@gmail.com",
   phones: ["+254 742 777 444", "+254 720 484 848"],
-  logo: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/02/hotstep-holdings-png-logo.png",
+  logo: hotstepLogo.url,
   office:
     "Shell petrol station RM B10 along Thogoto Mutarakwa road, 800 metres from the southern bypass at Thogoto junction, Gikambura.",
   vision:
