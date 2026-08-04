@@ -276,16 +276,25 @@ export const team = [
 
 export const heroSlides = [
   {
-    image: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/03/GOSHEN-GARDENS.jpg",
+    image: goshenSlider.url,
     title: "GOSHEN GARDENS",
     subtitle: "Gilgil, Nakuru — 550K cash offer",
     to: "/properties/goshen-gardens",
+    banner: true,
+  },
+  {
+    image: edenRidgeSlider.url,
+    title: "EDEN RIDGE GARDENS",
+    subtitle: "Kamangu, Kikuyu — 990K cash offer",
+    to: "/properties/eden-ridge-gardens",
+    banner: true,
   },
   {
     image: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/08/summit-2.jpg",
     title: "SUMMIT GARDENS PHASE 2",
     subtitle: "Kamangu, Kikuyu — 1.4M cash offer",
     to: "/properties/summit-gardens-phase-2",
+    banner: false,
   },
   {
     image:
@@ -293,8 +302,10 @@ export const heroSlides = [
     title: "SUNRISE GARDENS PHASE 2",
     subtitle: "Kamangu, Kikuyu — 1.1M cash offer",
     to: "/properties/sunrise-gardens-phase-2",
+    banner: false,
   },
 ];
+
 
 export const testimonials = [
   {
