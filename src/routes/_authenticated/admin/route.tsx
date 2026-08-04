@@ -49,8 +49,19 @@ function AdminLayout() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["my-access"],
-    queryFn: () => access(),
+    retry: false,
+    queryFn: async () => {
+      // Wait for the Supabase session to be restored before calling protected
+      // server fns — without a token the middleware throws "No authorization header".
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session?.access_token) {
+        void navigate({ to: "/auth", replace: true });
+        return null;
+      }
+      return access();
+    },
   });
+
 
   async function signOut() {
     await queryClient.cancelQueries();
