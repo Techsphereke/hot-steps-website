@@ -1,4 +1,6 @@
 import hotstepLogo from "@/assets/hotstep-logo.png.asset.json";
+import goshenSlider from "@/assets/goshen-slider.jpg.asset.json";
+import edenRidgeSlider from "@/assets/eden-ridge-slider.jpg.asset.json";
 
 export const site = {
   name: "Hotstep Holdings Ltd",
