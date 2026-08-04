@@ -9,10 +9,10 @@ export function PropertyCard({ property }: { property: Property }) {
         <img
           src={property.image}
           alt={`${property.title} — plots for sale in ${property.location}`}
-          className="aspect-[4/3] w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="aspect-[8/5] w-full object-cover transition-transform duration-500 group-hover:scale-105"
           loading="lazy"
           width={800}
-          height={600}
+          height={500}
         />
       </Link>
       <div className="space-y-3 p-5">
