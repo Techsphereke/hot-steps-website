@@ -101,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
     scripts: [
       {
@@ -111,7 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "Hotstep Holdings Ltd",
           url: "/",
-          logo: "https://hotstepsholdings.co.ke/wp-content/uploads/2025/02/hotstep-holdings-png-logo.png",
+          logo: "/favicon.png",
           email: "hotstepholdings@gmail.com",
           telephone: ["+254742777444", "+254720484848"],
         }),
