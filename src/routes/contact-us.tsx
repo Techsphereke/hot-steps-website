@@ -115,7 +115,7 @@ function ContactPage() {
             </form>
 
             <img
-              src="https://hotstepsholdings.co.ke/wp-content/uploads/2026/05/cee.jpg"
+              src="/media/HOTSTEP-CEO-min-768x1063.jpg"
               alt="Hotstep Holdings team ready to assist you"
               className="mt-8 w-full rounded-md object-cover"
               loading="lazy"

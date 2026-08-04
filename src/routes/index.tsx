@@ -188,7 +188,7 @@ function Index() {
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
           <Reveal>
             <img
-              src="https://hotstepsholdings.co.ke/wp-content/uploads/2025/02/title-12-min-1024x683.jpg"
+              src="/media/title-12-min-1024x683.jpg"
               alt="Hotstep Holdings clients receiving ready title deeds"
               className="w-full rounded-lg object-cover shadow-card"
               loading="lazy"

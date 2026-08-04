@@ -124,7 +124,7 @@ function AboutPage() {
           </div>
           <figure className="mt-10 overflow-hidden rounded-lg shadow-card">
             <img
-              src="https://hotstepsholdings.co.ke/wp-content/uploads/2025/03/MG_0368-1-min-scaled-e1742496913866-1024x497.jpg"
+              src="/media/MG_0368-1-min-scaled-e1742496913866-1024x497.jpg"
               alt="The Hotstep Holdings sales team"
               className="w-full object-cover"
               loading="lazy"

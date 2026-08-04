@@ -7,7 +7,7 @@ const title = "Diaspora Land Buying in Kenya | Hotstep Holdings Ltd";
 const description =
   "Kenyans in the diaspora can buy genuine plots in Kikuyu, Kamangu and Thigio with virtual site visits, verified documents and ready title deeds from Hotstep Holdings.";
 const cover =
-  "https://hotstepsholdings.co.ke/wp-content/uploads/2025/04/WHAT-KENYANS-IN-DIASPORA-SHOULD-CONSIDER-BEFORE-BUYING-LAND.jpg";
+  "/media/WHAT-KENYANS-IN-DIASPORA-SHOULD-CONSIDER-BEFORE-BUYING-LAND.jpg";
 
 export const Route = createFileRoute("/diaspora")({
   component: DiasporaPage,
