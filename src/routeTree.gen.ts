@@ -10,33 +10,167 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutUsRouteImport } from './routes/about-us'
+import { Route as AwardsTitlesRouteImport } from './routes/awards-titles'
+import { Route as CareersRouteImport } from './routes/careers'
+import { Route as ContactUsRouteImport } from './routes/contact-us'
+import { Route as DiasporaRouteImport } from './routes/diaspora'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as BlogsIndexRouteImport } from './routes/blogs/index'
+import { Route as BlogsSlugRouteImport } from './routes/blogs/$slug'
+import { Route as PropertiesIndexRouteImport } from './routes/properties/index'
+import { Route as PropertiesSlugRouteImport } from './routes/properties/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutUsRoute = AboutUsRouteImport.update({
+  id: '/about-us',
+  path: '/about-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AwardsTitlesRoute = AwardsTitlesRouteImport.update({
+  id: '/awards-titles',
+  path: '/awards-titles',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactUsRoute = ContactUsRouteImport.update({
+  id: '/contact-us',
+  path: '/contact-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiasporaRoute = DiasporaRouteImport.update({
+  id: '/diaspora',
+  path: '/diaspora',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsIndexRoute = BlogsIndexRouteImport.update({
+  id: '/blogs/',
+  path: '/blogs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogsSlugRoute = BlogsSlugRouteImport.update({
+  id: '/blogs/$slug',
+  path: '/blogs/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PropertiesIndexRoute = PropertiesIndexRouteImport.update({
+  id: '/properties/',
+  path: '/properties/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PropertiesSlugRoute = PropertiesSlugRouteImport.update({
+  id: '/properties/$slug',
+  path: '/properties/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/awards-titles': typeof AwardsTitlesRoute
+  '/careers': typeof CareersRoute
+  '/contact-us': typeof ContactUsRoute
+  '/diaspora': typeof DiasporaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
+  '/blogs/': typeof BlogsIndexRoute
+  '/properties/': typeof PropertiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/awards-titles': typeof AwardsTitlesRoute
+  '/careers': typeof CareersRoute
+  '/contact-us': typeof ContactUsRoute
+  '/diaspora': typeof DiasporaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
+  '/blogs': typeof BlogsIndexRoute
+  '/properties': typeof PropertiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
+  '/awards-titles': typeof AwardsTitlesRoute
+  '/careers': typeof CareersRoute
+  '/contact-us': typeof ContactUsRoute
+  '/diaspora': typeof DiasporaRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blogs/$slug': typeof BlogsSlugRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
+  '/blogs/': typeof BlogsIndexRoute
+  '/properties/': typeof PropertiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/about-us'
+    | '/awards-titles'
+    | '/careers'
+    | '/contact-us'
+    | '/diaspora'
+    | '/sitemap.xml'
+    | '/blogs/$slug'
+    | '/properties/$slug'
+    | '/blogs/'
+    | '/properties/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/about-us'
+    | '/awards-titles'
+    | '/careers'
+    | '/contact-us'
+    | '/diaspora'
+    | '/sitemap.xml'
+    | '/blogs/$slug'
+    | '/properties/$slug'
+    | '/blogs'
+    | '/properties'
+  id:
+    | '__root__'
+    | '/'
+    | '/about-us'
+    | '/awards-titles'
+    | '/careers'
+    | '/contact-us'
+    | '/diaspora'
+    | '/sitemap.xml'
+    | '/blogs/$slug'
+    | '/properties/$slug'
+    | '/blogs/'
+    | '/properties/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutUsRoute: typeof AboutUsRoute
+  AwardsTitlesRoute: typeof AwardsTitlesRoute
+  CareersRoute: typeof CareersRoute
+  ContactUsRoute: typeof ContactUsRoute
+  DiasporaRoute: typeof DiasporaRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BlogsSlugRoute: typeof BlogsSlugRoute
+  PropertiesSlugRoute: typeof PropertiesSlugRoute
+  BlogsIndexRoute: typeof BlogsIndexRoute
+  PropertiesIndexRoute: typeof PropertiesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +182,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about-us': {
+      id: '/about-us'
+      path: '/about-us'
+      fullPath: '/about-us'
+      preLoaderRoute: typeof AboutUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/awards-titles': {
+      id: '/awards-titles'
+      path: '/awards-titles'
+      fullPath: '/awards-titles'
+      preLoaderRoute: typeof AwardsTitlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-us': {
+      id: '/contact-us'
+      path: '/contact-us'
+      fullPath: '/contact-us'
+      preLoaderRoute: typeof ContactUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diaspora': {
+      id: '/diaspora'
+      path: '/diaspora'
+      fullPath: '/diaspora'
+      preLoaderRoute: typeof DiasporaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs/': {
+      id: '/blogs/'
+      path: '/blogs'
+      fullPath: '/blogs/'
+      preLoaderRoute: typeof BlogsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blogs/$slug': {
+      id: '/blogs/$slug'
+      path: '/blogs/$slug'
+      fullPath: '/blogs/$slug'
+      preLoaderRoute: typeof BlogsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/properties/': {
+      id: '/properties/'
+      path: '/properties'
+      fullPath: '/properties/'
+      preLoaderRoute: typeof PropertiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/properties/$slug': {
+      id: '/properties/$slug'
+      path: '/properties/$slug'
+      fullPath: '/properties/$slug'
+      preLoaderRoute: typeof PropertiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutUsRoute: AboutUsRoute,
+  AwardsTitlesRoute: AwardsTitlesRoute,
+  CareersRoute: CareersRoute,
+  ContactUsRoute: ContactUsRoute,
+  DiasporaRoute: DiasporaRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BlogsSlugRoute: BlogsSlugRoute,
+  PropertiesSlugRoute: PropertiesSlugRoute,
+  BlogsIndexRoute: BlogsIndexRoute,
+  PropertiesIndexRoute: PropertiesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
