@@ -59,7 +59,7 @@ function HeroSlider() {
 
   return (
     <section className="relative bg-surface" aria-label="Featured properties">
-      <div className="relative h-[280px] overflow-hidden sm:h-[420px] lg:h-[520px]">
+      <div className="relative h-[180px] overflow-hidden sm:h-[300px] lg:h-[430px]">
         {heroSlides.map((s, idx) => (
           <div
             key={s.title}
@@ -71,9 +71,10 @@ function HeroSlider() {
             <img
               src={s.image}
               alt={`${s.title} — ${s.subtitle}`}
-              className="h-full w-full object-cover"
+              className={`h-full w-full ${s.banner ? "object-contain" : "object-cover"}`}
               loading={idx === 0 ? "eager" : "lazy"}
             />
+
             {s.banner ? (
               <Link
                 to={s.to}
