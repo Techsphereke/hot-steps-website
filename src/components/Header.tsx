@@ -29,15 +29,16 @@ export function Header() {
 
       <div className="border-b border-border bg-background">
         <div className="container-page flex items-center justify-between gap-4 py-3">
-          <Link to="/" className="shrink-0">
+          <Link to="/" className="shrink-0 transition-transform duration-300 hover:scale-105">
             <img
               src={site.logo}
               alt="Hotstep Holdings Ltd logo"
-              className="h-14 w-auto sm:h-16"
-              width={180}
-              height={64}
+              className="h-20 w-auto sm:h-24 lg:h-28"
+              width={360}
+              height={112}
             />
           </Link>
+
 
           <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
             {nav.map((item) => (
