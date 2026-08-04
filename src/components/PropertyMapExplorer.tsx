@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { MapPin, Navigation } from "lucide-react";
 import { properties, propertyCoords } from "@/data/site";
@@ -25,7 +25,7 @@ const project = (slug: string) => layout[slug] ?? { x: W / 2, y: H / 2 };
 export function PropertyMapExplorer() {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
-  const listRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     if (paused) return;
@@ -34,7 +34,7 @@ export function PropertyMapExplorer() {
   }, [paused]);
 
   const current = points[active]!;
-  const currentPos = project(current.slug);
+  
 
   return (
     <section
@@ -130,7 +130,6 @@ export function PropertyMapExplorer() {
 
             <div
               className="pointer-events-none absolute left-4 bottom-4 max-w-[70%] rounded-lg border border-border bg-card/95 px-4 py-3 shadow-lift backdrop-blur"
-              style={{ transform: `translateY(${currentPos.y > H - 120 ? "-8px" : "0"})` }}
             >
               <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-accent">
                 <Navigation className="h-3.5 w-3.5" aria-hidden="true" />
@@ -141,7 +140,7 @@ export function PropertyMapExplorer() {
           </div>
 
           {/* Rotating property panel */}
-          <div ref={listRef} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             <article
               key={current.slug}
               className="animate-enter overflow-hidden rounded-2xl border border-border bg-card shadow-card"
