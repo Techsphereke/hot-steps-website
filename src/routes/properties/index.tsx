@@ -13,14 +13,6 @@ type Search = { location?: string | undefined; page?: number | undefined };
 
 const PER_PAGE = 9;
 
-function pageUrl(search: Search) {
-  const params = new URLSearchParams();
-  if (search.location) params.set("location", search.location);
-  if (search.page && search.page > 1) params.set("page", String(search.page));
-  const qs = params.toString();
-  return qs ? `/properties?${qs}` : "/properties";
-}
-
 export const Route = createFileRoute("/properties/")({
   loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
   component: PropertiesPage,
@@ -31,19 +23,19 @@ export const Route = createFileRoute("/properties/")({
       page: Number.isFinite(rawPage) && rawPage > 1 ? Math.floor(rawPage) : undefined,
     };
   },
-  head: ({ search }) => ({
+  head: () => ({
     meta: [
       { title },
       { name: "description", content: description },
       { property: "og:title", content: title },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: pageUrl(search) },
+      { property: "og:url", content: "/properties" },
       { property: "og:image", content: heroImage },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: heroImage },
     ],
-    links: [{ rel: "canonical", href: pageUrl(search) }],
+    links: [{ rel: "canonical", href: "/properties" }],
   }),
 });
 
