@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "build:cpanel": "NITRO_PRESET=node-server vite build",
+    "build:cpanel": "env -u DEV_SERVER__PROJECT_PATH -u LOVABLE_SANDBOX NITRO_PRESET=node-server vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
