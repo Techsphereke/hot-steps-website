@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Globe2, FileCheck2, Video, Handshake } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { site } from "@/data/site";
-import { siteContentQuery } from "@/lib/content.functions";
+import { siteContentQuery } from "@/lib/content.query";
 import { toLive } from "@/lib/live";
 import { previewImageMeta } from "@/lib/seo";
 

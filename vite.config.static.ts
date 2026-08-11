@@ -28,6 +28,11 @@ const postSlugs = [
 ];
 
 export default defineConfig({
+  vite: {
+    define: {
+      "import.meta.env.VITE_STATIC_EXPORT": JSON.stringify("true"),
+    },
+  },
   tanstackStart: {
     server: { entry: "server" },
     prerender: {

@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { Check, MapPin, Phone } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { PropertyCard } from "@/components/PropertyCard";
-import { siteContentQuery } from "@/lib/content.functions";
+import { siteContentQuery } from "@/lib/content.query";
 import { toLive, useLive } from "@/lib/live";
 import { site } from "@/data/site";
 import { previewImageMeta } from "@/lib/seo";

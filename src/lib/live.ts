@@ -1,6 +1,6 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { siteContentQuery } from "@/lib/content.functions";
+import { siteContentQuery } from "@/lib/content.query";
 import type { SiteContent } from "@/lib/content.server";
 import type { SiteContentPayload } from "@/lib/content.functions";
 import {

@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { siteContentQuery } from "@/lib/content.functions";
+import { siteContentQuery } from "@/lib/content.query";
 import { toLive, useLive } from "@/lib/live";
 import { previewImageMeta } from "@/lib/seo";
 import { posts } from "@/data/site";
