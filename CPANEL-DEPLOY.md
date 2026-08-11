@@ -17,14 +17,19 @@ This produces `dist/` — `dist/server` (Node server) and `dist/client` (static 
 
 ## 2. Upload
 
-Upload to your app folder on the server (e.g. `/home/USER/hotstep`):
+Extract the deployment zip directly into your app folder (for example
+`/home/USER/hotstep`). The app folder itself must contain:
 
 - `dist/`
 - `app.js`
 - `package.json`
 
-Nothing else is required at runtime (all dependencies are bundled into
-`dist/server`).
+Do not leave these files inside an extra `hotstep-cpanel/` folder. The required
+path is `/home/USER/hotstep/dist/server/index.mjs`, not
+`/home/USER/hotstep/hotstep-cpanel/dist/server/index.mjs`.
+
+Nothing else is required at runtime. The download contains a minimal
+`package.json`; all runtime code is already bundled into `dist/server`.
 
 ## 3. Create the Node.js app in cPanel
 
@@ -35,8 +40,8 @@ Setup Node.js App → Create Application:
 - Application URL: your domain
 - Application startup file: `app.js`
 
-Then click **Run NPM Install** (optional — the bundle is self-contained) and
-**Restart**.
+Do **not** run NPM Install for the prepared deployment zip; it is self-contained.
+Click **Restart** after uploading and after every environment-variable change.
 
 ## 4. Environment variables
 
@@ -68,6 +73,8 @@ Restart the app after saving.
 - If the domain shows the cPanel default page, make sure the domain's document
   root is the one Passenger created for the app and that `app.js` is set as the
   startup file.
+- If cPanel reports a startup error, verify Node.js 20+ is selected and check
+  that `dist/server/index.mjs` exists directly under the Application root.
 
 ## Simpler alternative
 
