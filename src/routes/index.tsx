@@ -5,7 +5,7 @@ import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/Reveal";
 import { Block } from "@/components/Block";
 import { PropertyCard } from "@/components/PropertyCard";
-import { siteContentQuery } from "@/lib/content.functions";
+import { siteContentQuery } from "@/lib/content.query";
 import { toLive, useLive, type LiveSlide } from "@/lib/live";
 import { site, heroImage } from "@/data/site";
 import { previewImageMeta } from "@/lib/seo";

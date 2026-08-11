@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
-import { siteContentQuery } from "@/lib/content.functions";
+import { siteContentQuery } from "@/lib/content.query";
 import { useLive } from "@/lib/live";
 
 const title = "Contact Hotstep Holdings Ltd | Book a Site Visit in Kikuyu";

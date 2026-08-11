@@ -1,6 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
-import { queryOptions } from "@tanstack/react-query";
 
 import { loadSiteContent, type SiteContent } from "./content.server";
 
@@ -25,9 +24,3 @@ export const getSiteContent = createServerFn({ method: "GET" }).handler(
     return { ...content, origin };
   },
 );
-
-export const siteContentQuery = queryOptions({
-  queryKey: ["site-content"],
-  queryFn: () => getSiteContent(),
-  staleTime: 30_000,
-});
