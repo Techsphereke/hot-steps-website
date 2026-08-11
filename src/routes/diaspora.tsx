@@ -2,6 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Globe2, FileCheck2, Video, Handshake } from "lucide-react";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { site } from "@/data/site";
+import { siteContentQuery } from "@/lib/content.functions";
+import { toLive } from "@/lib/live";
+import { previewImageMeta } from "@/lib/seo";
 
 const title = "Diaspora Land Buying in Kenya | Hotstep Holdings Ltd";
 const description =
@@ -10,8 +13,12 @@ const cover =
   "/media/WHAT-KENYANS-IN-DIASPORA-SHOULD-CONSIDER-BEFORE-BUYING-LAND.jpg";
 
 export const Route = createFileRoute("/diaspora")({
+  loader: async ({ context }) => {
+    const live = toLive(await context.queryClient.ensureQueryData(siteContentQuery));
+    return { origin: live.origin };
+  },
   component: DiasporaPage,
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title },
       { name: "description", content: description },
@@ -19,9 +26,8 @@ export const Route = createFileRoute("/diaspora")({
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/diaspora" },
-      { property: "og:image", content: cover },
+      ...previewImageMeta(loaderData?.origin ?? undefined, cover),
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: cover },
     ],
     links: [{ rel: "canonical", href: "/diaspora" }],
   }),
