@@ -12,7 +12,11 @@ const preset =
   process.env["NITRO_PRESET"] ?? (process.env["VERCEL"] ? "vercel" : "cloudflare-module");
 
 export default defineConfig({
-  nitro: { preset },
+  nitro: {
+    preset,
+    // Emit everything into dist/ (dist/server + dist/client) for cPanel uploads.
+    output: { dir: "dist", serverDir: "dist/server", publicDir: "dist/client" },
+  },
   tanstackStart: {
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
