@@ -2,7 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { Block } from "@/components/Block";
 import { siteContentQuery } from "@/lib/content.functions";
-import { useLive } from "@/lib/live";
+import { toLive, useLive } from "@/lib/live";
+import { previewImageMeta } from "@/lib/seo";
 import { ceoImage } from "@/data/site";
 
 const title = "About Hotstep Holdings Ltd | Genuine Land & Ready Title Deeds";
@@ -10,9 +11,12 @@ const description =
   "Our story, vision, mission and team. Hotstep Holdings Ltd helps buyers own genuine, affordable land in Kikuyu and beyond with ready title deeds.";
 
 export const Route = createFileRoute("/about-us")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
+  loader: async ({ context }) => {
+    const live = toLive(await context.queryClient.ensureQueryData(siteContentQuery));
+    return { origin: live.origin, cover: live.team[0]?.image ?? ceoImage };
+  },
   component: AboutPage,
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title },
       { name: "description", content: description },
@@ -20,9 +24,8 @@ export const Route = createFileRoute("/about-us")({
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/about-us" },
-      { property: "og:image", content: ceoImage },
+      ...previewImageMeta(loaderData?.origin ?? undefined, loaderData?.cover ?? ceoImage),
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: ceoImage },
     ],
     links: [{ rel: "canonical", href: "/about-us" }],
   }),

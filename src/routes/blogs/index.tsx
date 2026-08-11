@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { siteContentQuery } from "@/lib/content.functions";
-import { useLive } from "@/lib/live";
+import { toLive, useLive } from "@/lib/live";
+import { previewImageMeta } from "@/lib/seo";
 import { posts } from "@/data/site";
 
 const title = "Information Center | Land Buying Guides & News — Hotstep Holdings";
@@ -10,9 +11,12 @@ const description =
 const cover = posts[0]!.image;
 
 export const Route = createFileRoute("/blogs/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
+  loader: async ({ context }) => {
+    const live = toLive(await context.queryClient.ensureQueryData(siteContentQuery));
+    return { origin: live.origin, cover: live.posts[0]?.image ?? cover };
+  },
   component: BlogsPage,
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title },
       { name: "description", content: description },
@@ -20,9 +24,8 @@ export const Route = createFileRoute("/blogs/")({
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/blogs" },
-      { property: "og:image", content: cover },
+      ...previewImageMeta(loaderData?.origin ?? undefined, loaderData?.cover ?? cover),
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: cover },
     ],
     links: [{ rel: "canonical", href: "/blogs" }],
   }),
@@ -44,7 +47,7 @@ function BlogsPage() {
               <Link to="/blogs/$slug" params={{ slug: p.slug }}>
                 <img
                   src={p.image}
-                  alt={p.title}
+                  alt={`${p.title} — Hotstep Holdings land buying guide`}
                   className="aspect-[16/10] w-full object-cover"
                   loading="lazy"
                 />

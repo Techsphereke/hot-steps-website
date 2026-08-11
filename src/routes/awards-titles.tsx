@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { siteContentQuery } from "@/lib/content.functions";
-import { useLive } from "@/lib/live";
+import { toLive, useLive } from "@/lib/live";
+import { previewImageMeta } from "@/lib/seo";
 import { awards, testimonials } from "@/data/site";
 
 const title = "Awards & Titles | Hotstep Holdings Ltd Recognition & Testimonials";
@@ -10,9 +11,12 @@ const description =
 const cover = awards[0]!.image;
 
 export const Route = createFileRoute("/awards-titles")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
+  loader: async ({ context }) => {
+    const live = toLive(await context.queryClient.ensureQueryData(siteContentQuery));
+    return { origin: live.origin, cover: live.awards[0]?.image ?? cover };
+  },
   component: AwardsPage,
-  head: () => ({
+  head: ({ loaderData }) => ({
     meta: [
       { title },
       { name: "description", content: description },
@@ -20,9 +24,8 @@ export const Route = createFileRoute("/awards-titles")({
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/awards-titles" },
-      { property: "og:image", content: cover },
+      ...previewImageMeta(loaderData?.origin ?? undefined, loaderData?.cover ?? cover),
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: cover },
     ],
     links: [{ rel: "canonical", href: "/awards-titles" }],
   }),
@@ -44,7 +47,7 @@ function AwardsPage() {
             <figure key={a.title} className="overflow-hidden rounded-lg shadow-card">
               <img
                 src={a.image}
-                alt={a.title}
+                alt={`${a.title} award presented to Hotstep Holdings Ltd`}
                 className="aspect-[3/4] w-full object-cover"
                 loading="lazy"
               />
