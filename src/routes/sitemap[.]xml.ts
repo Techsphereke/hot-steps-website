@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { properties, posts } from "@/data/site";
+import { properties, posts, locations } from "@/data/site";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
@@ -24,6 +24,21 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/awards-titles", changefreq: "monthly", priority: "0.6" },
           { path: "/careers", changefreq: "monthly", priority: "0.5" },
           { path: "/contact-us", changefreq: "monthly", priority: "0.7" },
+          ...Array.from(
+            { length: Math.ceil(properties.length / 9) },
+            (_, i) => i + 1,
+          )
+            .filter((n) => n > 1)
+            .map((n) => ({
+              path: `/properties?page=${n}`,
+              changefreq: "weekly" as const,
+              priority: "0.6",
+            })),
+          ...locations.map((l) => ({
+            path: `/properties?location=${l.slug}`,
+            changefreq: "weekly" as const,
+            priority: "0.6",
+          })),
           ...properties.map((p) => ({
             path: `/properties/${p.slug}`,
             changefreq: "weekly" as const,
@@ -39,7 +54,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const urls = entries.map((e) =>
           [
             `  <url>`,
-            `    <loc>${BASE_URL}${e.path}</loc>`,
+            `    <loc>${BASE_URL}${e.path.replace(/&/g, "&amp;")}</loc>`,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
