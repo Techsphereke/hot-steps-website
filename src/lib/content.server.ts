@@ -38,29 +38,61 @@ function publicClient() {
   });
 }
 
+const EMPTY_CONTENT: SiteContent = {
+  properties: [],
+  slides: [],
+  posts: [],
+  awards: [],
+  team: [],
+  blocks: [],
+  settings: {},
+};
+
+// Short-lived in-memory cache: content changes rarely, so repeat page views
+// (and the many routes rendered per crawl) reuse one round trip.
+const CACHE_TTL_MS = 60_000;
+let cache: { content: SiteContent; at: number } | undefined;
+
 export async function loadSiteContent(): Promise<SiteContent> {
-  const db = publicClient();
+  if (cache && Date.now() - cache.at < CACHE_TTL_MS) return cache.content;
 
-  const [properties, slides, posts, awards, team, blocks, settings] = await Promise.all([
-    db.from("properties").select("*").eq("published", true).order("sort_order"),
-    db.from("hero_slides").select("*").eq("published", true).order("sort_order"),
-    db.from("posts").select("*").eq("published", true).order("sort_order"),
-    db.from("awards").select("*").eq("published", true).order("sort_order"),
-    db.from("team_members").select("*").eq("published", true).order("sort_order"),
-    db.from("page_blocks").select("*").eq("published", true).order("sort_order"),
-    db.from("site_settings").select("key, value"),
-  ]);
+  try {
+    const db = publicClient();
 
-  const settingsMap: Record<string, string> = {};
-  for (const row of settings.data ?? []) settingsMap[row.key] = row.value;
+    const [properties, slides, posts, awards, team, blocks, settings] = await Promise.all([
+      db.from("properties").select("*").eq("published", true).order("sort_order"),
+      db.from("hero_slides").select("*").eq("published", true).order("sort_order"),
+      db.from("posts").select("*").eq("published", true).order("sort_order"),
+      db.from("awards").select("*").eq("published", true).order("sort_order"),
+      db.from("team_members").select("*").eq("published", true).order("sort_order"),
+      db.from("page_blocks").select("*").eq("published", true).order("sort_order"),
+      db.from("site_settings").select("key, value"),
+    ]);
 
-  return {
-    properties: properties.data ?? [],
-    slides: slides.data ?? [],
-    posts: posts.data ?? [],
-    awards: awards.data ?? [],
-    team: team.data ?? [],
-    blocks: blocks.data ?? [],
-    settings: settingsMap,
-  };
+    const settingsMap: Record<string, string> = {};
+    for (const row of settings.data ?? []) settingsMap[row.key] = row.value;
+
+    const content: SiteContent = {
+      properties: properties.data ?? [],
+      slides: slides.data ?? [],
+      posts: posts.data ?? [],
+      awards: awards.data ?? [],
+      team: team.data ?? [],
+      blocks: blocks.data ?? [],
+      settings: settingsMap,
+    };
+
+    cache = { content, at: Date.now() };
+    return content;
+  } catch (error) {
+    // A backend hiccup must never take the public site down: fall back to the
+    // last good payload, or to the bundled static content downstream.
+    console.error(error);
+    return cache?.content ?? EMPTY_CONTENT;
+  }
 }
+
+export function clearSiteContentCache() {
+  cache = undefined;
+}
+
