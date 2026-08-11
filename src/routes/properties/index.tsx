@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { PageShell, PageHero } from "@/components/PageShell";
 import { PropertyCard } from "@/components/PropertyCard";
 import { siteContentQuery } from "@/lib/content.functions";
-import { useLive } from "@/lib/live";
+import { toLive, useLive } from "@/lib/live";
 import { locations, heroImage } from "@/data/site";
+import { previewImageMeta } from "@/lib/seo";
 
 const title = "Plots for Sale in Kikuyu, Kamangu, Thigio & Gilgil | Hotstep Holdings";
 const description =
@@ -50,8 +51,11 @@ export const Route = createFileRoute("/properties/")({
     page: search.page,
   }),
   loader: async ({ context, deps }) => {
-    await context.queryClient.ensureQueryData(siteContentQuery);
-    return buildMeta(deps);
+    const content = await context.queryClient.ensureQueryData(siteContentQuery);
+    const live = toLive(content);
+    const loc = locations.find((l) => l.slug === deps.location);
+    const first = live.properties.find((p) => (loc ? p.location.includes(loc.place ?? "") : true));
+    return { ...buildMeta(deps), origin: live.origin, cover: first?.image ?? heroImage };
   },
   component: PropertiesPage,
   validateSearch: (search: Record<string, unknown>): Search => {
@@ -62,7 +66,9 @@ export const Route = createFileRoute("/properties/")({
     };
   },
   head: ({ loaderData }) => {
-    const m = loaderData ?? { pageTitle: title, pageDescription: description, url: "/properties" };
+    const m =
+      loaderData ??
+      ({ pageTitle: title, pageDescription: description, url: "/properties", origin: null, cover: heroImage } as const);
     return {
       meta: [
         { title: m.pageTitle },
@@ -71,9 +77,8 @@ export const Route = createFileRoute("/properties/")({
         { property: "og:description", content: m.pageDescription },
         { property: "og:type", content: "website" },
         { property: "og:url", content: m.url },
-        { property: "og:image", content: heroImage },
+        ...previewImageMeta(m.origin ?? undefined, m.cover),
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: heroImage },
       ],
       links: [{ rel: "canonical", href: m.url }],
     };

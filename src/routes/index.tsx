@@ -8,6 +8,7 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { siteContentQuery } from "@/lib/content.functions";
 import { toLive, useLive, type LiveSlide } from "@/lib/live";
 import { site, heroImage } from "@/data/site";
+import { previewImageMeta } from "@/lib/seo";
 
 const title = "Hotstep Holdings Ltd | Affordable Plots for Sale in Kikuyu, Kamangu & Thigio";
 const description =
@@ -27,9 +28,8 @@ export const Route = createFileRoute("/")({
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: "/" },
-        { property: "og:image", content: cover.startsWith("http") ? cover : heroImage },
+        ...previewImageMeta(live.origin ?? undefined, cover || heroImage),
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:image", content: cover.startsWith("http") ? cover : heroImage },
       ],
       links: [{ rel: "canonical", href: "/" }],
       scripts: [
@@ -249,7 +249,7 @@ function Index() {
                 <figure className="group overflow-hidden rounded-lg shadow-card transition-shadow duration-300 hover:shadow-lift">
                   <img
                     src={a.image}
-                    alt={a.title}
+                    alt={`${a.title} award presented to Hotstep Holdings Ltd`}
                     className="aspect-[3/4] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
@@ -279,7 +279,7 @@ function Index() {
                   <Link to="/blogs/$slug" params={{ slug: p.slug }}>
                     <img
                       src={p.image}
-                      alt={p.title}
+                      alt={`${p.title} — Hotstep Holdings land buying insights`}
                       className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
                     />
