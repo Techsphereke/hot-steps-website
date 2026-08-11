@@ -112,7 +112,7 @@ function AboutPage() {
                 <img
                   src={m.image}
                   alt={`${m.name} — ${m.role} at Hotstep Holdings`}
-                  className="aspect-square w-full object-cover"
+                  className="aspect-square w-full object-cover object-top"
                   loading="lazy"
                 />
                 <figcaption className="p-4 text-center">
