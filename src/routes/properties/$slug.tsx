@@ -5,6 +5,7 @@ import { PropertyCard } from "@/components/PropertyCard";
 import { siteContentQuery } from "@/lib/content.functions";
 import { toLive, useLive } from "@/lib/live";
 import { site } from "@/data/site";
+import { previewImageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/properties/$slug")({
   loader: async ({ context, params }) => {
@@ -12,7 +13,7 @@ export const Route = createFileRoute("/properties/$slug")({
     const live = toLive(content);
     const property = live.properties.find((p) => p.slug === params.slug);
     if (!property) throw notFound();
-    return { property };
+    return { property, origin: live.origin };
   },
   component: PropertyPage,
   head: ({ params, loaderData }) => {
@@ -29,12 +30,7 @@ export const Route = createFileRoute("/properties/$slug")({
         { property: "og:description", content: description },
         { property: "og:type", content: "product" },
         { property: "og:url", content: `/properties/${params.slug}` },
-        ...(p?.image?.startsWith("http")
-          ? [
-              { property: "og:image", content: p.image },
-              { name: "twitter:image", content: p.image },
-            ]
-          : []),
+        ...previewImageMeta(loaderData?.origin ?? undefined, p?.image),
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: `/properties/${params.slug}` }],

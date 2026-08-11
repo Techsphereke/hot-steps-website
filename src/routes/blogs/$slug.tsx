@@ -3,13 +3,15 @@ import { PageShell } from "@/components/PageShell";
 import { siteContentQuery } from "@/lib/content.functions";
 import { toLive, useLive } from "@/lib/live";
 import { site } from "@/data/site";
+import { previewImageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/blogs/$slug")({
   loader: async ({ context, params }) => {
     const content = await context.queryClient.ensureQueryData(siteContentQuery);
-    const post = toLive(content).posts.find((p) => p.slug === params.slug);
+    const live = toLive(content);
+    const post = live.posts.find((p) => p.slug === params.slug);
     if (!post) throw notFound();
-    return { post };
+    return { post, origin: live.origin };
   },
   component: PostPage,
   head: ({ params, loaderData }) => {
@@ -24,12 +26,7 @@ export const Route = createFileRoute("/blogs/$slug")({
         { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { property: "og:url", content: `/blogs/${params.slug}` },
-        ...(p?.image?.startsWith("http")
-          ? [
-              { property: "og:image", content: p.image },
-              { name: "twitter:image", content: p.image },
-            ]
-          : []),
+        ...previewImageMeta(loaderData?.origin ?? undefined, p?.image),
         { name: "twitter:card", content: "summary_large_image" },
       ],
       links: [{ rel: "canonical", href: `/blogs/${params.slug}` }],
@@ -64,7 +61,7 @@ function PostPage() {
           <h1 className="text-3xl font-bold text-primary-dark sm:text-4xl">{post.title}</h1>
           <img
             src={post.image}
-            alt={post.title}
+            alt={`${post.title} — Hotstep Holdings Ltd article cover image`}
             className="mt-6 w-full rounded-lg object-cover shadow-card"
           />
           <div
@@ -100,7 +97,7 @@ function PostPage() {
                 <Link to="/blogs/$slug" params={{ slug: p.slug }}>
                   <img
                     src={p.image}
-                    alt={p.title}
+                    alt={`${p.title} — related Hotstep Holdings article`}
                     className="aspect-[16/10] w-full object-cover"
                     loading="lazy"
                   />

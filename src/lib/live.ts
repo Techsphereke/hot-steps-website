@@ -2,6 +2,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { siteContentQuery } from "@/lib/content.functions";
 import type { SiteContent } from "@/lib/content.server";
+import type { SiteContentPayload } from "@/lib/content.functions";
 import {
   properties as fallbackProperties,
   posts as fallbackPosts,
@@ -37,6 +38,7 @@ export type LiveContent = {
   awards: { title: string; image: string }[];
   team: { name: string; role: string; image: string }[];
   blocks: SiteContent["blocks"];
+  origin: string | null;
   settings: {
     name: string;
     tagline: string;
@@ -52,7 +54,7 @@ function paragraphsToHtml(paragraphs: string[]) {
   return paragraphs.map((p) => `<p>${p}</p>`).join("");
 }
 
-export function toLive(content: SiteContent | undefined): LiveContent {
+export function toLive(content: SiteContentPayload | SiteContent | undefined): LiveContent {
   const s = content?.settings ?? {};
   const phones = s["phones"]
     ? s["phones"]
@@ -103,6 +105,7 @@ export function toLive(content: SiteContent | undefined): LiveContent {
     awards: content?.awards.length ? content.awards : fallbackAwards,
     team: content?.team.length ? content.team : fallbackTeam,
     blocks: content?.blocks ?? [],
+    origin: (content && "origin" in content ? content.origin : null) ?? null,
     settings: {
       name: s["name"] ?? fallbackSite.name,
       tagline: s["tagline"] ?? fallbackSite.tagline,
