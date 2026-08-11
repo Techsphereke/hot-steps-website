@@ -2,7 +2,7 @@ import { queryOptions } from "@tanstack/react-query";
 
 import { getSiteContent, type SiteContentPayload } from "./content.functions";
 
-const isStaticExport = import.meta.env.VITE_STATIC_EXPORT === "true";
+const isStaticExport = import.meta.env["VITE_STATIC_EXPORT"] === "true";
 
 /**
  * Public content query.
