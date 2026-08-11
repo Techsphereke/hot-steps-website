@@ -13,8 +13,46 @@ type Search = { location?: string | undefined; page?: number | undefined };
 
 const PER_PAGE = 9;
 
+function buildMeta(search: Search) {
+  const loc = locations.find((l) => l.slug === search.location);
+  const place = loc ? loc.label.replace(/^Plots for sale in /i, "") : null;
+  const page = search.page && search.page > 1 ? search.page : 1;
+
+  const params = new URLSearchParams();
+  if (loc) params.set("location", loc.slug);
+  if (page > 1) params.set("page", String(page));
+  const qs = params.toString();
+  const url = qs ? `/properties?${qs}` : "/properties";
+
+  let pageTitle = title;
+  let pageDescription = description;
+
+  if (place) {
+    pageTitle = `Plots for Sale in ${place}, Kiambu | Hotstep Holdings Ltd`;
+    pageDescription = `Affordable, genuine plots for sale in ${place} with ready title deeds and flexible payment plans from Hotstep Holdings Ltd. Book a free site visit today.`;
+  }
+
+  if (page > 1) {
+    pageTitle = place
+      ? `Plots for Sale in ${place} — Page ${page} | Hotstep Holdings Ltd`
+      : `Plots for Sale in Kikuyu, Kamangu & Thigio — Page ${page} | Hotstep Holdings`;
+    pageDescription = place
+      ? `Page ${page} of available plots for sale in ${place}. Ready title deeds, flexible payment plans and free site visits with Hotstep Holdings Ltd.`
+      : `Page ${page} of Hotstep Holdings plots on sale across Kikuyu, Gikambura, Kamangu, Thigio, Nachu and Gilgil. Ready title deeds and flexible payment plans.`;
+  }
+
+  return { pageTitle, pageDescription, url };
+}
+
 export const Route = createFileRoute("/properties/")({
-  loader: ({ context }) => context.queryClient.ensureQueryData(siteContentQuery),
+  loaderDeps: ({ search }: { search: Search }) => ({
+    location: search.location,
+    page: search.page,
+  }),
+  loader: async ({ context, deps }) => {
+    await context.queryClient.ensureQueryData(siteContentQuery);
+    return buildMeta(deps);
+  },
   component: PropertiesPage,
   validateSearch: (search: Record<string, unknown>): Search => {
     const rawPage = Number(search["page"]);
@@ -23,21 +61,25 @@ export const Route = createFileRoute("/properties/")({
       page: Number.isFinite(rawPage) && rawPage > 1 ? Math.floor(rawPage) : undefined,
     };
   },
-  head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "/properties" },
-      { property: "og:image", content: heroImage },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: heroImage },
-    ],
-    links: [{ rel: "canonical", href: "/properties" }],
-  }),
+  head: ({ loaderData }) => {
+    const m = loaderData ?? { pageTitle: title, pageDescription: description, url: "/properties" };
+    return {
+      meta: [
+        { title: m.pageTitle },
+        { name: "description", content: m.pageDescription },
+        { property: "og:title", content: m.pageTitle },
+        { property: "og:description", content: m.pageDescription },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: m.url },
+        { property: "og:image", content: heroImage },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:image", content: heroImage },
+      ],
+      links: [{ rel: "canonical", href: m.url }],
+    };
+  },
 });
+
 
 function PropertiesPage() {
   const { location, page } = Route.useSearch();
