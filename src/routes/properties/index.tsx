@@ -54,7 +54,10 @@ export const Route = createFileRoute("/properties/")({
     const content = await context.queryClient.ensureQueryData(siteContentQuery);
     const live = toLive(content);
     const loc = locations.find((l) => l.slug === deps.location);
-    const first = live.properties.find((p) => (loc ? p.location.includes(loc.place ?? "") : true));
+    const place = loc ? loc.label.replace(/^Plots for sale in /i, "") : null;
+    const first = place
+      ? live.properties.find((p) => p.location.toLowerCase().includes(place.toLowerCase()))
+      : live.properties[0];
     return { ...buildMeta(deps), origin: live.origin, cover: first?.image ?? heroImage };
   },
   component: PropertiesPage,
