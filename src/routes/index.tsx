@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ShieldCheck, FileCheck2, Wallet, MapPin } fr
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/Reveal";
 import { Block } from "@/components/Block";
+import { PropertyCard } from "@/components/PropertyCard";
 import { siteContentQuery } from "@/lib/content.functions";
 import { toLive, useLive, type LiveSlide } from "@/lib/live";
 import { site, heroImage } from "@/data/site";
