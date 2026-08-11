@@ -151,6 +151,9 @@ function HeroSlider({ slides }: { slides: LiveSlide[] }) {
 
 function Index() {
   const live = useLive();
+  const [visible, setVisible] = useState(6);
+  const shown = live.properties.slice(0, visible);
+  const hasMore = visible < live.properties.length;
 
   return (
     <PageShell>
@@ -166,20 +169,33 @@ function Index() {
           </Reveal>
 
           <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {live.properties.slice(0, 6).map((p, idx) => (
-              <Reveal key={p.slug} delay={idx * 80}>
+            {shown.map((p, idx) => (
+              <Reveal key={p.slug} delay={(idx % 6) * 80}>
                 <PropertyCard property={p} />
               </Reveal>
             ))}
           </div>
 
-          <div className="mt-10 text-center">
-            <Link to="/properties" className="btn-brand hover:bg-primary-dark">
-              View more properties
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+            {hasMore && (
+              <button
+                type="button"
+                onClick={() => setVisible((v) => v + 6)}
+                className="btn-brand hover:bg-primary-dark"
+              >
+                Load more plots
+              </button>
+            )}
+            <Link
+              to="/properties"
+              className="rounded-full border border-border bg-card px-6 py-2.5 text-sm font-semibold uppercase tracking-wide hover:border-primary hover:text-primary-dark"
+            >
+              View all properties
             </Link>
           </div>
         </div>
       </section>
+
 
       <section className="py-16">
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
