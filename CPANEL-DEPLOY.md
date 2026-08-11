@@ -13,18 +13,18 @@ npm install
 npm run build:cpanel     # NITRO_PRESET=node-server
 ```
 
-This produces `.output/` (server + static assets).
+This produces `dist/` — `dist/server` (Node server) and `dist/client` (static assets).
 
 ## 2. Upload
 
 Upload to your app folder on the server (e.g. `/home/USER/hotstep`):
 
-- `.output/`
+- `dist/`
 - `app.js`
 - `package.json`
 
 Nothing else is required at runtime (all dependencies are bundled into
-`.output/server`).
+`dist/server`).
 
 ## 3. Create the Node.js app in cPanel
 
@@ -63,7 +63,7 @@ Restart the app after saving.
   everything else (pages, SEO, listings, blogs) still works, but images added
   through the admin panel will not upload or display.
 
-- **Redeploying:** rebuild, re-upload `.output/`, then Restart the app.
+- **Redeploying:** rebuild, re-upload `dist/`, then Restart the app.
 - **Subfolder installs** are not supported — host at a domain or subdomain root.
 - If the domain shows the cPanel default page, make sure the domain's document
   root is the one Passenger created for the app and that `app.js` is set as the
