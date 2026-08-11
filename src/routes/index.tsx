@@ -155,33 +155,6 @@ function Index() {
     <PageShell>
       <HeroSlider slides={live.slides} />
 
-      <PropertyMapExplorer properties={live.properties} />
-
-      <section className="bg-surface py-14">
-        <div className="container-page">
-          <Reveal>
-            <h1 className="section-title text-3xl sm:text-5xl">AFFORDABLE PLOTS FOR SALE.</h1>
-            <p className="mt-2 text-center text-lg text-primary-dark/80 sm:text-xl">
-              In Kikuyu, Gikambura, Kamangu, Thigio, Nachu.
-            </p>
-          </Reveal>
-
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {live.properties.slice(0, 6).map((p, idx) => (
-              <Reveal key={p.slug} delay={idx * 80}>
-                <PropertyCard property={p} />
-              </Reveal>
-            ))}
-          </div>
-
-          <div className="mt-10 text-center">
-            <Link to="/properties" className="btn-brand hover:bg-primary-dark">
-              View more properties
-            </Link>
-          </div>
-        </div>
-      </section>
-
       <section className="py-16">
         <div className="container-page grid items-center gap-10 lg:grid-cols-2">
           <Reveal>
