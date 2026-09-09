@@ -7,10 +7,10 @@ no "Setup Node.js App", no restarts. cPanel just serves files.
 
 ```bash
 npm install
-npm run build:cpanel
+npm run build
 ```
 
-Output: `dist/client/` — pre-rendered HTML for the home page, About Us, Diaspora,
+Output: `dist/` — pre-rendered HTML for the home page, About Us, Diaspora,
 Properties (list + every property + location filters), Blogs (list + every article),
 Awards & Titles, Careers, Contact Us, plus `sitemap.xml`, `robots.txt`, all images
 under `/media/` and `/brand/`, the favicon and a hidden `.htaccess`.
