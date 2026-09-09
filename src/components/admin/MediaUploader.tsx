@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { Upload, X } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
-import { adminUploadMedia } from "@/lib/admin.functions";
+import { browserAdminUploadMedia } from "@/lib/admin-data";
 
 type Props = {
   value: string;
@@ -13,7 +12,6 @@ export function MediaUploader({ value, onChange, label = "Image" }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const uploadMedia = useServerFn(adminUploadMedia);
 
   async function upload(file: File) {
     if (file.size > 8 * 1024 * 1024) {
@@ -23,9 +21,7 @@ export function MediaUploader({ value, onChange, label = "Image" }: Props) {
     setBusy(true);
     setError(null);
     try {
-      const body = new FormData();
-      body.set("file", file);
-      const result = await uploadMedia({ data: body });
+      const result = await browserAdminUploadMedia(file);
       onChange(result.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Upload failed. Please try again.");
@@ -75,7 +71,7 @@ export function MediaUploader({ value, onChange, label = "Image" }: Props) {
           }}
         />
         <input
-          type="url"
+          type="text"
           value={value}
           placeholder="…or paste an image URL"
           onChange={(e) => onChange(e.target.value)}

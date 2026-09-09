@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
 
-import { adminDelete, adminList, adminSave } from "@/lib/admin.functions";
+import { browserAdminDelete, browserAdminList, browserAdminSave } from "@/lib/admin-data";
 import { MediaUploader } from "./MediaUploader";
 import { RichTextEditor } from "./RichTextEditor";
 
@@ -49,20 +48,16 @@ export function CollectionManager({
   imageKey = "image",
 }: Props) {
   const queryClient = useQueryClient();
-  const list = useServerFn(adminList);
-  const save = useServerFn(adminSave);
-  const remove = useServerFn(adminDelete);
-
   const [draft, setDraft] = useState<Row | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const { data: rows = [], isLoading } = useQuery({
     queryKey: ["admin", table],
-    queryFn: () => list({ data: { table } }) as Promise<Row[]>,
+    queryFn: () => browserAdminList(table),
   });
 
   const saveMutation = useMutation({
-    mutationFn: (row: Row) => save({ data: { table, row } }),
+    mutationFn: (row: Row) => browserAdminSave(table, row),
     onSuccess: async () => {
       setDraft(null);
       setError(null);
@@ -73,7 +68,7 @@ export function CollectionManager({
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => remove({ data: { table, id } }),
+    mutationFn: (id: string) => browserAdminDelete(table, id),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["admin", table] });
       await queryClient.invalidateQueries({ queryKey: ["site-content"] });

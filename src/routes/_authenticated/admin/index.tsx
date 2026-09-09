@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import {
   Home,
   Images,
@@ -35,7 +34,7 @@ import {
   YAxis,
 } from "recharts";
 
-import { adminList } from "@/lib/admin.functions";
+import { browserAdminList } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/_authenticated/admin/")({
   component: AdminDashboard,
@@ -135,7 +134,6 @@ function timeAgo(iso?: string) {
 }
 
 function AdminDashboard() {
-  const list = useServerFn(adminList);
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [focus, setFocus] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -145,7 +143,7 @@ function AdminDashboard() {
     queryFn: async () => {
       const entries = await Promise.all(
         collections.map(async (c) => {
-          const rows = (await list({ data: { table: c.table } })) as Row[];
+           const rows = (await browserAdminList(c.table)) as Row[];
           return [c.table, rows] as const;
         }),
       );
@@ -296,6 +294,12 @@ function AdminDashboard() {
           </a>
         </div>
       </header>
+
+      {query.error ? (
+        <div className="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+          Content could not be loaded. {(query.error as Error).message}
+        </div>
+      ) : null}
 
       {/* Filter bar */}
       <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-border bg-card p-3 shadow-card sm:flex sm:justify-between">

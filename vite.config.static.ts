@@ -3,8 +3,8 @@
 //
 // Every public page is pre-rendered to plain HTML at build time, so cPanel only
 // has to serve files (no Node.js app, no Passenger, no restart).
-// The admin panel needs a server runtime, so it is NOT part of this build —
-// keep using the Lovable URL for content editing, then rebuild + re-upload.
+// Public pages and the browser-based admin content editor are exported. Only
+// privileged user-account operations still require the hosted app server.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 const propertySlugs = [
@@ -27,6 +27,18 @@ const postSlugs = [
   "understanding-zoning-laws-in-kenya-a-guide-for-land-buyers",
 ];
 
+const adminPaths = [
+  "/admin",
+  "/admin/hero",
+  "/admin/properties",
+  "/admin/posts",
+  "/admin/awards",
+  "/admin/team",
+  "/admin/pages",
+  "/admin/settings",
+  "/admin/users",
+];
+
 export default defineConfig({
   vite: {
     define: {
@@ -37,7 +49,8 @@ export default defineConfig({
     server: { entry: "server" },
     prerender: {
       enabled: true,
-      crawlLinks: true,
+      autoStaticPathsDiscovery: false,
+      crawlLinks: false,
       failOnError: false,
     },
     pages: [
@@ -50,7 +63,10 @@ export default defineConfig({
       { path: "/contact-us" },
       { path: "/properties" },
       { path: "/blogs" },
+      { path: "/auth" },
+      { path: "/reset-password" },
       { path: "/sitemap.xml" },
+      ...adminPaths.map((path) => ({ path })),
       ...propertySlugs.map((slug) => ({ path: `/properties/${slug}` })),
       ...locationSlugs.map((slug) => ({ path: `/properties?location=${slug}` })),
       ...postSlugs.map((slug) => ({ path: `/blogs/${slug}` })),

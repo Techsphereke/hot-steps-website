@@ -16,6 +16,7 @@ import {
 
 import { supabase } from "@/integrations/supabase/client";
 import { site } from "@/data/site";
+import { getBrowserAdminAccess } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
@@ -46,33 +47,7 @@ function AdminLayout() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["my-access"],
     retry: false,
-    queryFn: async () => {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const userId = sessionData.session?.user.id;
-      if (!userId) {
-        void navigate({ to: "/auth", replace: true });
-        return null;
-      }
-
-      // Keep the access gate compatible with the static cPanel build. The
-      // security-definer functions validate the signed-in user in the database,
-      // so no TanStack server-function endpoint is required here.
-      const [{ data: isAdmin, error: adminError }, { data: isSuperAdmin, error: superError }] =
-        await Promise.all([
-          supabase.rpc("is_admin", { _user_id: userId }),
-          supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
-        ]);
-
-      if (adminError) throw adminError;
-      if (superError) throw superError;
-
-      return {
-        userId,
-        roles: isSuperAdmin ? ["super_admin"] : isAdmin ? ["admin"] : [],
-        isAdmin: Boolean(isAdmin),
-        isSuperAdmin: Boolean(isSuperAdmin),
-      };
-    },
+    queryFn: getBrowserAdminAccess,
   });
 
 
@@ -87,7 +62,34 @@ function AdminLayout() {
     return <p className="p-10 text-sm text-muted-foreground">Loading your panel…</p>;
   }
 
-  if (error || !data?.isAdmin) {
+  if (error) {
+    return (
+      <div className="mx-auto max-w-md p-10 text-center">
+        <h1 className="text-xl font-semibold">We could not verify your access</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Refresh the page or sign in again. Your administrator role has not been changed.
+        </p>
+        <div className="mt-4 flex justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => void queryClient.invalidateQueries({ queryKey: ["my-access"] })}
+            className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            Try again
+          </button>
+          <button
+            type="button"
+            onClick={() => void signOut()}
+            className="rounded-md border border-border px-4 py-2 text-sm font-semibold"
+          >
+            Sign in again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data?.isAdmin) {
     return (
       <div className="mx-auto max-w-md p-10 text-center">
         <h1 className="text-xl font-semibold">No access</h1>

@@ -39,6 +39,12 @@ if (existsSync(client)) {
   rmSync(resolve(root, "dist/_worker.js"), { recursive: true, force: true });
 }
 
+// TanStack's static pass can leave deployment metadata at the dist root.
+// Shared hosting does not need these files and may mistake them for a Node app.
+rmSync(resolve(root, "dist/nitro.json"), { force: true });
+rmSync(resolve(root, "dist/package.json"), { force: true });
+rmSync(resolve(root, "dist/package-lock.json"), { force: true });
+
 const files = existsSync(resolve(root, "dist")) ? readdirSync(resolve(root, "dist")) : [];
 console.log(
   `\nStatic site ready in dist/ (${files.length} entries). Upload the CONTENTS of dist/ into public_html, including the hidden .htaccess file.\n`,

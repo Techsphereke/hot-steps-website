@@ -34,16 +34,13 @@ That's it — the site is live immediately.
 
 ## Admin panel / live editing
 
-The CMS (properties, hero slider, blogs, awards, team, pages, users) needs a server
-runtime, so it is **not** part of the static export. Workflow:
+The static export includes `/auth` and `/admin`. Signed-in administrators can manage
+properties, hero slides, blogs, awards, team members, page sections, site settings,
+and images directly from the cPanel domain. Changes are saved to the live backend.
 
-1. Edit content in the admin panel on the Lovable URL (`/admin`).
-2. Run `npm run build:cpanel` again.
-3. Re-upload `dist/client/` — the new content is baked into the HTML.
-
-If you want the admin panel and live content on your own domain instead, cPanel must
-have **Setup Node.js App** (Node 20+) and we'd deploy the Node build instead of this
-static one.
+User-account administration (creating users, changing roles/passwords, and deleting
+accounts) remains on the secure hosted management panel because those actions require
+protected server access. The Users page in the cPanel panel links there automatically.
 
 ## Notes
 
