@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
-    "build:cpanel": "env -u DEV_SERVER__PROJECT_PATH -u LOVABLE_SANDBOX vite build --config vite.config.static.ts",
+    "build": "node scripts/build.mjs",
+    "build:server": "vite build",
+    "build:cpanel": "node scripts/build.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
