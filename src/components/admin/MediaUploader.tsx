@@ -71,7 +71,7 @@ export function MediaUploader({ value, onChange, label = "Image" }: Props) {
           }}
         />
         <input
-          type="url"
+          type="text"
           value={value}
           placeholder="…or paste an image URL"
           onChange={(e) => onChange(e.target.value)}
