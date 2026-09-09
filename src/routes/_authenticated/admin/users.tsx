@@ -11,8 +11,8 @@ import {
   adminSendPasswordReset,
   adminSetUserPassword,
   adminSetUserRole,
-  getMyAccess,
 } from "@/lib/admin.functions";
+import { getBrowserAdminAccess } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/_authenticated/admin/users")({
   component: UsersPage,
@@ -30,7 +30,6 @@ const roleLabels: Record<Role, string> = {
 function UsersPage() {
   const queryClient = useQueryClient();
   const listUsers = useServerFn(adminListUsers);
-  const access = useServerFn(getMyAccess);
   const createUser = useServerFn(adminCreateUser);
   const setRole = useServerFn(adminSetUserRole);
   const setPassword = useServerFn(adminSetUserPassword);
@@ -46,10 +45,12 @@ function UsersPage() {
     role: "editor" as Role,
   });
 
-  const me = useQuery({ queryKey: ["my-access"], queryFn: () => access() });
+  const staticExport = import.meta.env.VITE_STATIC_EXPORT === "true";
+  const me = useQuery({ queryKey: ["my-access"], queryFn: getBrowserAdminAccess });
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["admin", "users"],
     queryFn: () => listUsers(),
+    enabled: !staticExport,
   });
 
   async function refresh() {
@@ -94,7 +95,23 @@ function UsersPage() {
       )}
       {notice && <p className="mt-4 text-sm text-primary-dark">{notice}</p>}
 
-      {isSuper && (
+      {staticExport ? (
+        <div className="mt-6 rounded-xl border border-border bg-card p-5 shadow-card">
+          <h2 className="text-lg font-semibold">Manage user accounts securely</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Content editing works here. Creating users, changing passwords and removing accounts
+            require the secure hosted panel.
+          </p>
+          <a
+            href="https://clone-master-seo.lovable.app/admin/users"
+            className="mt-4 inline-flex rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            Open secure user management
+          </a>
+        </div>
+      ) : null}
+
+      {!staticExport && isSuper && (
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -174,7 +191,7 @@ function UsersPage() {
         </form>
       )}
 
-      <div className="mt-8 space-y-3">
+      {!staticExport ? <div className="mt-8 space-y-3">
         {isLoading ? (
           <p className="text-sm text-muted-foreground">Loading users…</p>
         ) : (
@@ -270,7 +287,7 @@ function UsersPage() {
             </div>
           ))
         )}
-      </div>
+      </div> : null}
     </div>
   );
 }

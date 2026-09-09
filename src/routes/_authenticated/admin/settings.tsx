@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-
-import { adminGetSettings, adminSaveSettings } from "@/lib/admin.functions";
+import { browserAdminGetSettings, browserAdminSaveSettings } from "@/lib/admin-data";
 
 export const Route = createFileRoute("/_authenticated/admin/settings")({
   component: SettingsPage,
@@ -11,10 +9,10 @@ export const Route = createFileRoute("/_authenticated/admin/settings")({
 
 function SettingsPage() {
   const queryClient = useQueryClient();
-  const get = useServerFn(adminGetSettings);
-  const save = useServerFn(adminSaveSettings);
-
-  const { data } = useQuery({ queryKey: ["admin", "settings"], queryFn: () => get() });
+  const { data } = useQuery({
+    queryKey: ["admin", "settings"],
+    queryFn: browserAdminGetSettings,
+  });
   const [values, setValues] = useState<Record<string, string>>({});
   const [saved, setSaved] = useState(false);
 
@@ -28,7 +26,7 @@ function SettingsPage() {
 
   const mutation = useMutation({
     mutationFn: () =>
-      save({ data: { values: Object.entries(values).map(([key, value]) => ({ key, value })) } }),
+      browserAdminSaveSettings(Object.entries(values).map(([key, value]) => ({ key, value }))),
     onSuccess: async () => {
       setSaved(true);
       await queryClient.invalidateQueries({ queryKey: ["site-content"] });
