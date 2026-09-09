@@ -45,7 +45,7 @@ function UsersPage() {
     role: "editor" as Role,
   });
 
-  const staticExport = import.meta.env.VITE_STATIC_EXPORT === "true";
+  const staticExport = import.meta.env["VITE_STATIC_EXPORT"] === "true";
   const me = useQuery({ queryKey: ["my-access"], queryFn: getBrowserAdminAccess });
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["admin", "users"],
