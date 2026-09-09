@@ -1,6 +1,5 @@
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import {
   LayoutDashboard,
   Home,
@@ -16,7 +15,6 @@ import {
 } from "lucide-react";
 
 import { supabase } from "@/integrations/supabase/client";
-import { getMyAccess } from "@/lib/admin.functions";
 import { site } from "@/data/site";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -45,20 +43,35 @@ function AdminLayout() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const access = useServerFn(getMyAccess);
-
   const { data, isLoading, error } = useQuery({
     queryKey: ["my-access"],
     retry: false,
     queryFn: async () => {
-      // Wait for the Supabase session to be restored before calling protected
-      // server fns — without a token the middleware throws "No authorization header".
       const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session?.access_token) {
+      const userId = sessionData.session?.user.id;
+      if (!userId) {
         void navigate({ to: "/auth", replace: true });
         return null;
       }
-      return access();
+
+      // Keep the access gate compatible with the static cPanel build. The
+      // security-definer functions validate the signed-in user in the database,
+      // so no TanStack server-function endpoint is required here.
+      const [{ data: isAdmin, error: adminError }, { data: isSuperAdmin, error: superError }] =
+        await Promise.all([
+          supabase.rpc("is_admin", { _user_id: userId }),
+          supabase.rpc("has_role", { _user_id: userId, _role: "super_admin" }),
+        ]);
+
+      if (adminError) throw adminError;
+      if (superError) throw superError;
+
+      return {
+        userId,
+        roles: isSuperAdmin ? ["super_admin"] : isAdmin ? ["admin"] : [],
+        isAdmin: Boolean(isAdmin),
+        isSuperAdmin: Boolean(isSuperAdmin),
+      };
     },
   });
 
