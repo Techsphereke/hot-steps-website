@@ -7,10 +7,10 @@ no "Setup Node.js App", no restarts. cPanel just serves files.
 
 ```bash
 npm install
-npm run build:cpanel
+npm run build
 ```
 
-Output: `dist/client/` — pre-rendered HTML for the home page, About Us, Diaspora,
+Output: `dist/` — pre-rendered HTML for the home page, About Us, Diaspora,
 Properties (list + every property + location filters), Blogs (list + every article),
 Awards & Titles, Careers, Contact Us, plus `sitemap.xml`, `robots.txt`, all images
 under `/media/` and `/brand/`, the favicon and a hidden `.htaccess`.
@@ -19,7 +19,7 @@ under `/media/` and `/brand/`, the favicon and a hidden `.htaccess`.
 
 1. cPanel → **File Manager** → open `public_html` (or the domain's document root).
 2. Delete the old files if you are replacing an existing site.
-3. Upload **the contents of `dist/client/`** (not the folder itself). Easiest: zip the
+3. Upload **the contents of `dist/`** (not the folder itself). Easiest: zip the
    contents locally, upload the zip, then use **Extract**.
 4. File Manager → **Settings → Show hidden files**, and confirm `.htaccess` is there.
 
