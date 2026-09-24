@@ -63,6 +63,11 @@ type Collection = {
   hint: string;
 };
 
+function rowsFor(data: Record<string, Row[]> | undefined, table: string): Row[] {
+  const rows = data?.[table];
+  return Array.isArray(rows) ? rows : [];
+}
+
 const collections: Collection[] = [
   {
     table: "properties",
@@ -156,7 +161,7 @@ function AdminDashboard() {
   const stats = useMemo(() => {
     if (!data) return null;
     return collections.map((c) => {
-      const rows = data[c.table] ?? [];
+      const rows = rowsFor(data, c.table);
       const published = rows.filter((r) => r.published !== false).length;
       return {
         ...c,
@@ -182,7 +187,7 @@ function AdminDashboard() {
   const activity = useMemo(() => {
     if (!data) return [];
     const all = collections.flatMap((c) =>
-      (data[c.table] ?? []).map((r) => ({ ...r, collection: c })),
+      rowsFor(data, c.table).map((r) => ({ ...r, collection: c })),
     );
     return all
       .filter((r) => (focus ? r.collection.table === focus : true))
@@ -210,7 +215,7 @@ function AdminDashboard() {
 
   const trend = useMemo(() => {
     if (!data) return [];
-    const all = collections.flatMap((c) => data[c.table] ?? []);
+    const all = collections.flatMap((c) => rowsFor(data, c.table));
     const weeks = Array.from({ length: 8 }, (_, i) => {
       const end = new Date();
       end.setHours(23, 59, 59, 999);
@@ -250,7 +255,7 @@ function AdminDashboard() {
   ];
 
   const propertyStatuses = useMemo(() => {
-    const rows = data?.["properties"] ?? [];
+    const rows = rowsFor(data, "properties");
     const map = new Map<string, number>();
     rows.forEach((r) => {
       const key = r.status?.trim() || "Unspecified";
